@@ -10,7 +10,7 @@ import { PlusCircle, Search, Plus, Home, ChevronDown, X } from './components/Ico
 import PropertyCard from './components/PropertyCard';
 import PropertyFormModal from './components/PropertyFormModal';
 import MultiSelect from './components/MultiSelect';
-import PropertyDetailPage from './pages/PropertyDetailPage'; // Исправленный путь импорта
+import PropertyDetailPage from './src/pages/PropertyDetailPage'; // Исправленный путь импорта
 
 const App: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>(INITIAL_PROPERTIES);
