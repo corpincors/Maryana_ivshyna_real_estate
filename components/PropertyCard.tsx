@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Импортируем Link
 import { Property } from '../types';
-import { MapPin, Heart, Share2, Eye, Phone, Link, ChevronLeft, ChevronRight, Trash2 } from './Icons'; // Импортирована Trash2
+import { MapPin, Heart, Share2, Eye, Phone, Link as LinkIcon, ChevronLeft, ChevronRight, Trash2 } from './Icons'; // Переименовали Link в LinkIcon
 
 interface PropertyCardProps {
   property: Property;
   onEdit?: (property: Property) => void;
-  onDelete?: (id: string) => void; // Добавлен пропс onDelete
+  onDelete?: (id: string) => void;
   isClientView?: boolean;
 }
 
@@ -25,10 +26,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onEdit, onDelete,
 
   const generateClientLink = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const url = new URL(window.location.href);
-    url.searchParams.set('clientMode', 'true');
-    // In a real app, we'd probably filter by property ID too: url.searchParams.set('id', property.id);
-    navigator.clipboard.writeText(url.toString());
+    const clientUrl = `${window.location.origin}/property/${property.id}?clientMode=true`;
+    navigator.clipboard.writeText(clientUrl);
     alert('Ссылка для клиента скопирована! (Номер владельца скрыт)');
   };
 
@@ -133,10 +132,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onEdit, onDelete,
                 Связаться
               </button>
             )}
-            <button className="w-12 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-xl transition-all flex items-center justify-center">
+            <Link 
+              to={`/property/${property.id}${isClientView ? '?clientMode=true' : ''}`} // Ссылка на страницу деталей
+              className="w-12 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-xl transition-all flex items-center justify-center"
+            >
               <Eye className="w-5 h-5" />
-            </button>
-            {/* Кнопка удаления */}
+            </Link>
             {!isClientView && onDelete && (
               <button 
                 onClick={() => onDelete(property.id)}
@@ -152,7 +153,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onEdit, onDelete,
               onClick={generateClientLink}
               className="w-full bg-slate-50 hover:bg-slate-100 text-slate-500 py-3 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition"
             >
-              <Link className="w-3 h-3" /> Ссылка для клиента
+              <LinkIcon className="w-3 h-3" /> Ссылка для клиента
             </button>
           )}
         </div>
