@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Property, PropertyCategory } from '../types';
 import { X, Home, Maximize2, Layers, Camera, Plus, Phone } from './Icons';
@@ -90,7 +89,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     const files = e.target.files;
     if (!files) return;
 
-    const readers = Array.from(files).map((file) => {
+    const readers = Array.from(files).map((file: File) => { // Явно указываем тип 'file' как 'File'
       return new Promise<string>((resolve) => {
         const reader = new FileReader();
         reader.onload = (event) => {

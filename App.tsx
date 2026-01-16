@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Property, FilterState, PropertyCategory } from './types';
 import { 
@@ -113,6 +112,10 @@ const App: React.FC = () => {
     });
     setIsModalOpen(false);
     setEditingProperty(null);
+  };
+
+  const handleDeleteProperty = (id: string) => {
+    setProperties(prev => prev.filter(p => p.id !== id));
   };
 
   const resetFilters = () => {
@@ -346,6 +349,7 @@ const App: React.FC = () => {
             property={property} 
             isClientView={isClientMode}
             onEdit={isClientMode ? undefined : (p) => { setEditingProperty(p); setIsModalOpen(true); }}
+            onDelete={isClientMode ? undefined : handleDeleteProperty} // Передача функции удаления
           />
         ))}
 

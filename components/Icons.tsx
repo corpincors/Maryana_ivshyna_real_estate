@@ -1,4 +1,3 @@
-
 import { 
   PlusCircle, 
   Search, 
@@ -16,7 +15,8 @@ import {
   Link,
   ChevronLeft,
   ChevronRight,
-  Camera
+  Camera,
+  Trash2 // Добавлена иконка Trash2
 } from 'lucide-react';
 
 export {
@@ -36,5 +36,6 @@ export {
   Link,
   ChevronLeft,
   ChevronRight,
-  Camera
+  Camera,
+  Trash2 // Экспортирована иконка Trash2
 };

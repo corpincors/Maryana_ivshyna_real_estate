@@ -1,15 +1,15 @@
-
 import React, { useState } from 'react';
 import { Property } from '../types';
-import { MapPin, Heart, Share2, Eye, Phone, Link, ChevronLeft, ChevronRight } from './Icons';
+import { MapPin, Heart, Share2, Eye, Phone, Link, ChevronLeft, ChevronRight, Trash2 } from './Icons'; // Импортирована Trash2
 
 interface PropertyCardProps {
   property: Property;
   onEdit?: (property: Property) => void;
+  onDelete?: (id: string) => void; // Добавлен пропс onDelete
   isClientView?: boolean;
 }
 
-const PropertyCard: React.FC<PropertyCardProps> = ({ property, onEdit, isClientView }) => {
+const PropertyCard: React.FC<PropertyCardProps> = ({ property, onEdit, onDelete, isClientView }) => {
   const [currentImg, setCurrentImg] = useState(0);
   const pricePerMeter = Math.round(property.price / (property.category === 'land' ? property.landArea || 1 : property.totalArea));
 
@@ -136,6 +136,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onEdit, isClientV
             <button className="w-12 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-xl transition-all flex items-center justify-center">
               <Eye className="w-5 h-5" />
             </button>
+            {/* Кнопка удаления */}
+            {!isClientView && onDelete && (
+              <button 
+                onClick={() => onDelete(property.id)}
+                className="w-12 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl transition-all flex items-center justify-center"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+            )}
           </div>
           
           {!isClientView && (
