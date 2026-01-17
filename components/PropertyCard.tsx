@@ -50,8 +50,28 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onEdit, onDelete,
         throw new Error(`Failed to save public link to database: ${response.status} ${errorText}`);
       }
 
-      await navigator.clipboard.writeText(clientUrl);
-      showSuccess('Ссылка для клиента скопирована и сохранена!');
+      // Attempt to copy to clipboard using modern API, fallback to execCommand
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(clientUrl);
+        showSuccess('Ссылка для клиента скопирована и сохранена!');
+      } else {
+        // Fallback for environments where Clipboard API is not available (e.g., iframes, non-HTTPS)
+        const textarea = document.createElement('textarea');
+        textarea.value = clientUrl;
+        textarea.style.position = 'fixed'; // Prevent scrolling to bottom of page in MS Edge.
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          showSuccess('Ссылка для клиента скопирована и сохранена (fallback)!');
+        } catch (err) {
+          console.error('Fallback: Unable to copy to clipboard', err);
+          showError('Ошибка при копировании ссылки в буфер обмена (fallback).');
+        } finally {
+          document.body.removeChild(textarea);
+        }
+      }
     } catch (error) {
       console.error("Error generating or saving client link:", error);
       showError('Ошибка при создании или сохранении ссылки для клиента.');
