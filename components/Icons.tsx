@@ -16,7 +16,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Camera,
-  Trash2 // Добавлена иконка Trash2
+  Trash2,
+  LogOut // Добавлена иконка LogOut
 } from 'lucide-react';
 
 export {
@@ -37,5 +38,6 @@ export {
   ChevronLeft,
   ChevronRight,
   Camera,
-  Trash2 // Экспортирована иконка Trash2
+  Trash2,
+  LogOut // Экспортирована иконка LogOut
 };
