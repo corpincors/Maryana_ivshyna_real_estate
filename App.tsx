@@ -138,16 +138,14 @@ const App: React.FC = () => {
 
   const handleSaveProperty = async (property: Property) => {
     try {
-      if (property.id) {
-        // Обновление существующего объекта
+      if (editingProperty) { // Если editingProperty не null, это обновление существующего объекта
         const response = await fetch(`${API_URL}/${property.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(property),
         });
         if (!response.ok) throw new Error('Failed to update property');
-      } else {
-        // Добавление нового объекта
+      } else { // Иначе, это новый объект
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
