@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Property, PropertyCategory } from '../types';
 import { X, Home, Maximize2, Layers, Camera, Plus, Phone, Trash2 } from './Icons';
 import MultiSelect from './MultiSelect';
-import EditableDistrictList from './EditableDistrictList'; // Импортируем новый компонент
+import EditableDistrictList from '../src/components/EditableDistrictList'; // Исправленный путь импорта
 import { 
   ROOMS_OPTIONS, LAND_TYPES, HOUSE_TYPES, REPAIR_TYPES, HOUSING_CLASSES,
   HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, COMM_OPTIONS, INFRA_OPTIONS 
@@ -131,7 +131,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     }));
     
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.value = '';
     }
   };
 
@@ -251,7 +251,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                 className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
               />
               <datalist id="districts-list">
-                {availableDistricts.map(d => <option key={d} value={d} />)}
+                {availableDistricts.map(d => <option key={d} value={d}>{d}</option>)}
               </datalist>
             </div>
 
@@ -448,7 +448,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                 />
                 <MultiSelect 
                   label="Инфраструктура" 
-                  prefix="Выбрано" 
+                  prefix="И" 
                   options={INFRA_OPTIONS} 
                   selected={formData.infra || []} 
                   onChange={(s) => setFormData(p => ({...p, infra: s}))} 
