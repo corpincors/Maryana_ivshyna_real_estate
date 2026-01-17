@@ -61,7 +61,7 @@ const App: React.FC = () => {
     comfort: [],
     comm: [],
     infra: [],
-    keywords: '', // Инициализируем поле для ключевых слов
+    keywords: '',
   });
 
   const filteredProperties = useMemo(() => {
@@ -139,7 +139,7 @@ const App: React.FC = () => {
       hasFurniture: null, hasRepair: null, repairType: 'Любой', heating: 'Любой',
       isEOselya: null, landType: 'Любой', minLandArea: '', maxLandArea: '',
       tech: [], comfort: [], comm: [], infra: [],
-      keywords: '', // Сбрасываем ключевые слова
+      keywords: '',
     });
   };
 
@@ -188,6 +188,17 @@ const App: React.FC = () => {
             {!isDetailPage && (
               <section className="bg-white p-8 lg:p-12 rounded-[3.5rem] shadow-sm border border-slate-50 mb-12">
                 <div className="grid grid-cols-1 gap-12">
+                  {/* Ключевые слова - перемещено сюда */}
+                  <div className="space-y-3">
+                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Ключевые слова</label>
+                    <input 
+                      type="text" 
+                      placeholder="Поиск по адресу, описанию..." 
+                      value={filters.keywords} 
+                      onChange={(e) => setFilters({...filters, keywords: e.target.value})} 
+                      className="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" 
+                    />
+                  </div>
                   
                   <div className="flex flex-wrap gap-3 p-1.5 bg-slate-50 rounded-[2rem] w-fit">
                     {CATEGORIES.map(cat => (
@@ -224,16 +235,8 @@ const App: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="space-y-3 lg:col-span-2"> {/* Расширяем на 2 колонки для лучшего вида */}
-                      <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Ключевые слова</label>
-                      <input 
-                        type="text" 
-                        placeholder="Поиск по адресу, описанию..." 
-                        value={filters.keywords} 
-                        onChange={(e) => setFilters({...filters, keywords: e.target.value})} 
-                        className="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" 
-                      />
-                    </div>
+                    {/* Старое место для ключевых слов, теперь пусто */}
+                    <div className="lg:col-span-2"></div> 
 
                     {isLand ? (
                       <>
