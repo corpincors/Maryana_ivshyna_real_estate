@@ -324,6 +324,33 @@
       "landArea": 3,
       "landType": "Сельхоз",
       "publicLink": "http://192.168.5.101:3000/property/ls77mc2az?clientMode=true"
+    },
+    {
+      "id": "8cwthryc0",
+      "category": "apartments",
+      "type": "Secondary",
+      "price": 23,
+      "district": "323",
+      "address": "323",
+      "ownerPhone": "323",
+      "totalArea": 32,
+      "rooms": "1",
+      "houseType": "Кирпичный",
+      "housingClass": "Комфорт",
+      "hasFurniture": false,
+      "hasRepair": false,
+      "repairType": "Косметический",
+      "heating": "Центральное",
+      "tech": [],
+      "comfort": [],
+      "comm": [],
+      "infra": [],
+      "isEOselya": false,
+      "description": "",
+      "imageUrls": [
+        "https://via.placeholder.com/800x600/f0f4f8/94a3b8?text=Домик"
+      ],
+      "kitchenArea": 32
     }
   ]
 }
