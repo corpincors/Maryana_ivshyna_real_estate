@@ -6,15 +6,16 @@ import {
   REPAIR_TYPES, HOUSING_CLASSES, HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, 
   COMM_OPTIONS, INFRA_OPTIONS, CATEGORIES, INITIAL_DISTRICTS
 } from './constants.tsx';
-import { PlusCircle, Search, Plus, Home, LogOut } from './components/Icons';
+import { PlusCircle, Search, Plus, Home, LogOut, ChevronDown } from './components/Icons';
 import PropertyCard from './components/PropertyCard';
-import PropertyFormModal from './components/PropertyFormModal';
+import PropertyFormModal from './components/PropertyFormModal'; // Исправленный путь
 import MultiSelect from './components/MultiSelect';
 import PropertyDetailPage from './src/pages/PropertyDetailPage';
 import LoginPage from '@/src/pages/LoginPage';
 import { useAuth } from '@/src/context/AuthContext';
 
 const API_URL = '/api/properties';
+const ADDITIONAL_FILTERS_STORAGE_KEY = 'realty_crm_additional_filters_open';
 
 const App: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -23,6 +24,20 @@ const App: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, logout } = useAuth();
+
+  const [showAdditionalFilters, setShowAdditionalFilters] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const storedState = localStorage.getItem(ADDITIONAL_FILTERS_STORAGE_KEY);
+      return storedState === 'true'; // По умолчанию закрыто, если не найдено
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(ADDITIONAL_FILTERS_STORAGE_KEY, String(showAdditionalFilters));
+    }
+  }, [showAdditionalFilters]);
 
   const fetchProperties = useCallback(async () => {
     try {
@@ -285,7 +300,7 @@ const App: React.FC = () => {
                     </div>
                     
                     <div className="flex flex-wrap gap-3 p-1.5 bg-slate-50 rounded-[2rem] w-fit">
-                      {CATEGORIES.map((cat) => ( // Removed explicit type here, relying on CATEGORIES type from constants.tsx
+                      {CATEGORIES.map((cat) => (
                         <button
                           key={cat.id}
                           onClick={() => setFilters(prev => ({ ...prev, category: cat.id as PropertyCategory }))}
@@ -320,143 +335,160 @@ const App: React.FC = () => {
                       </div>
 
                       <div className="lg:col-span-2"></div> 
-
-                      {isLand ? (
-                        <>
-                          <div className="space-y-3">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Площадь земли (сот.)</label>
-                            <div className="flex gap-2">
-                              <input type="number" placeholder="От" value={filters.minLandArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minLandArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                              <input type="number" placeholder="До" value={filters.maxLandArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxLandArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                            </div>
-                          </div>
-                          <div className="space-y-3">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Тип земли</label>
-                            <select 
-                              value={filters.landType}
-                              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, landType: e.target.value})}
-                              className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
-                            >
-                              <option value="Любой">Любой тип</option>
-                              {LAND_TYPES.map((t: string) => <option key={t} value={t}>{t}</option>)}
-                            </select>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="space-y-3">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Комнат</label>
-                            <select 
-                              value={filters.rooms}
-                              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, rooms: e.target.value})}
-                              className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
-                            >
-                              <option value="Любое">Любое</option>
-                              {ROOMS_OPTIONS.map((o: string) => <option key={o} value={o}>{o}</option>)}
-                            </select>
-                          </div>
-                          <div className="space-y-3">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Этаж (от/до)</label>
-                            <div className="flex gap-2">
-                              <input type="number" placeholder="Мин" value={filters.minFloor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minFloor: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                              <input type="number" placeholder="Макс" value={filters.maxFloor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxFloor: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                            </div>
-                          </div>
-                          <div className="space-y-3">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Общая пл. (м²)</label>
-                            <div className="flex gap-2">
-                              <input type="number" placeholder="От" value={filters.minArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                              <input type="number" placeholder="До" value={filters.maxArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                            </div>
-                          </div>
-                          <div className="space-y-3">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Пл. кухни (м²)</label>
-                            <div className="flex gap-2">
-                              <input type="number" placeholder="От" value={filters.minKitchenArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minKitchenArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                              <input type="number" placeholder="До" value={filters.maxKitchenArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxKitchenArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                            </div>
-                          </div>
-                          <div className="space-y-3">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Тип дома</label>
-                            <select value={filters.houseType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, houseType: e.target.value})} className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition">
-                              <option value="Любой">Любой тип</option>
-                              {HOUSE_TYPES.map((t: string) => <option key={t} value={t}>{t}</option>)}
-                            </select>
-                          </div>
-                          <div className="space-y-3">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Класс жилья</label>
-                            <select value={filters.housingClass} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, housingClass: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
-                              {HOUSING_CLASSES.map((c: string) => <option key={c} value={c}>{c}</option>)}
-                            </select>
-                          </div>
-                          <div className="space-y-3">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Вид ремонта</label>
-                            <select value={filters.repairType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, repairType: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
-                              {REPAIR_TYPES.map((r: string) => <option key={r} value={r}>{r}</option>)}
-                            </select>
-                          </div>
-                          <div className="space-y-3">
-                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Отопление</label>
-                            <select value={filters.heating} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, heating: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
-                              {HEATING_OPTIONS.map((h: string) => <option key={h} value={h}>{h}</option>)}
-                            </select>
-                          </div>
-                        </>
-                      )}
                     </div>
 
-                    {!isLand && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-8 border-y border-slate-50">
-                        <MultiSelect label="Техника" prefix="Т" options={TECH_OPTIONS} selected={filters.tech} onChange={(s: string[]) => setFilters({...filters, tech: s})} />
-                        <MultiSelect label="Комфорт" prefix="К" options={COMFORT_OPTIONS} selected={filters.comfort} onChange={(s: string[]) => setFilters(p => ({...p, comfort: s}))} />
-                        <MultiSelect label="Коммуникации" prefix="К" options={COMM_OPTIONS} selected={filters.comm} onChange={(s: string[]) => setFilters(p => ({...p, comm: s}))} />
-                        <MultiSelect label="Инфраструктура" prefix="И" options={INFRA_OPTIONS} selected={filters.infra} onChange={(s: string[]) => setFilters(p => ({...p, infra: s}))} />
+                    {/* Toggle for Additional Filters */}
+                    <div className="flex justify-center">
+                      <button
+                        type="button"
+                        onClick={() => setShowAdditionalFilters(prev => !prev)}
+                        className="flex items-center gap-2 px-6 py-3 bg-slate-50 hover:bg-slate-100 rounded-xl font-bold text-xs uppercase tracking-widest text-slate-600 transition-all active:scale-95"
+                      >
+                        {showAdditionalFilters ? 'Скрыть дополнительные фильтры' : 'Показать дополнительные фильтры'}
+                        <ChevronDown className={`w-4 h-4 transition-transform ${showAdditionalFilters ? 'rotate-180' : ''}`} />
+                      </button>
+                    </div>
+
+                    {/* Additional Filters Section (Conditional) */}
+                    {showAdditionalFilters && (
+                      <div className="space-y-10 animate-in fade-in slide-in-from-top-2 duration-200">
+                        {isLand ? (
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Площадь земли (сот.)</label>
+                              <div className="flex gap-2">
+                                <input type="number" placeholder="От" value={filters.minLandArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minLandArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                                <input type="number" placeholder="До" value={filters.maxLandArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxLandArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Тип земли</label>
+                              <select 
+                                value={filters.landType}
+                                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, landType: e.target.value})}
+                                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
+                              >
+                                <option value="Любой">Любой тип</option>
+                                {LAND_TYPES.map((t: string) => <option key={t} value={t}>{t}</option>)}
+                              </select>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Комнат</label>
+                              <select 
+                                value={filters.rooms}
+                                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, rooms: e.target.value})}
+                                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
+                              >
+                                <option value="Любое">Любое</option>
+                                {ROOMS_OPTIONS.map((o: string) => <option key={o} value={o}>{o}</option>)}
+                              </select>
+                            </div>
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Этаж (от/до)</label>
+                              <div className="flex gap-2">
+                                <input type="number" placeholder="Мин" value={filters.minFloor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minFloor: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                                <input type="number" placeholder="Макс" value={filters.maxFloor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxFloor: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Общая пл. (м²)</label>
+                              <div className="flex gap-2">
+                                <input type="number" placeholder="От" value={filters.minArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                                <input type="number" placeholder="До" value={filters.maxArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Пл. кухни (м²)</label>
+                              <div className="flex gap-2">
+                                <input type="number" placeholder="От" value={filters.minKitchenArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minKitchenArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                                <input type="number" placeholder="До" value={filters.maxKitchenArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxKitchenArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Тип дома</label>
+                              <select value={filters.houseType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, houseType: e.target.value})} className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition">
+                                <option value="Любой">Любой тип</option>
+                                {HOUSE_TYPES.map((t: string) => <option key={t} value={t}>{t}</option>)}
+                              </select>
+                            </div>
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Класс жилья</label>
+                              <select value={filters.housingClass} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, housingClass: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
+                                {HOUSING_CLASSES.map((c: string) => <option key={c} value={c}>{c}</option>)}
+                              </select>
+                            </div>
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Вид ремонта</label>
+                              <select value={filters.repairType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, repairType: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
+                                {REPAIR_TYPES.map((r: string) => <option key={r} value={r}>{r}</option>)}
+                              </select>
+                            </div>
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Отопление</label>
+                              <select value={filters.heating} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, heating: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
+                                {HEATING_OPTIONS.map((h: string) => <option key={h} value={h}>{h}</option>)}
+                              </select>
+                            </div>
+                          </div>
+                        )}
+
+                        {!isLand && (
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-8 border-y border-slate-50">
+                            <MultiSelect label="Техника" prefix="Т" options={TECH_OPTIONS} selected={filters.tech} onChange={(s: string[]) => setFilters({...filters, tech: s})} />
+                            <MultiSelect label="Комфорт" prefix="К" options={COMFORT_OPTIONS} selected={filters.comfort} onChange={(s: string[]) => setFilters(p => ({...p, comfort: s}))} />
+                            <MultiSelect label="Коммуникации" prefix="К" options={COMM_OPTIONS} selected={filters.comm} onChange={(s: string[]) => setFilters(p => ({...p, comm: s}))} />
+                            <MultiSelect label="Инфраструктура" prefix="И" options={INFRA_OPTIONS} selected={filters.infra} onChange={(s: string[]) => setFilters(p => ({...p, infra: s}))} />
+                          </div>
+                        )}
+
+                        <div className="flex flex-wrap items-center justify-between gap-10">
+                          {!isLand && (
+                            <div className="flex flex-wrap gap-10">
+                              <label className="flex items-center gap-3 cursor-pointer group">
+                                <div 
+                                  className={`w-12 h-6 rounded-full relative transition-all ${filters.hasFurniture === true ? 'bg-blue-600' : 'bg-slate-200'}`}
+                                  onClick={() => setFilters({...filters, hasFurniture: filters.hasFurniture === true ? null : true})}
+                                >
+                                  <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${filters.hasFurniture === true ? 'left-7' : 'left-1'}`}></div>
+                                </div>
+                                <span className="text-xs font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600">Мебель</span>
+                              </label>
+                              <label className="flex items-center gap-3 cursor-pointer group">
+                                <div 
+                                  className={`w-12 h-6 rounded-full relative transition-all ${filters.hasRepair === true ? 'bg-indigo-600' : 'bg-slate-200'}`}
+                                  onClick={() => setFilters({...filters, hasRepair: filters.hasRepair === true ? null : true})}
+                                >
+                                  <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${filters.hasRepair === true ? 'left-7' : 'left-1'}`}></div>
+                                </div>
+                                <span className="text-xs font-black text-slate-400 uppercase tracking-widest group-hover:text-indigo-600">С ремонтом</span>
+                              </label>
+                              <label className="flex items-center gap-3 cursor-pointer group">
+                                <div 
+                                  className={`w-12 h-6 rounded-full relative transition-colors ${filters.isEOselya === true ? 'bg-emerald-600' : 'bg-slate-200'}`}
+                                  onClick={() => setFilters({...filters, isEOselya: filters.isEOselya === true ? null : true})}
+                                >
+                                  <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${filters.isEOselya === true ? 'left-7' : 'left-1'}`}></div>
+                                </div>
+                                <span className="text-xs font-black text-slate-400 uppercase tracking-widest group-hover:text-emerald-600">єОселя</span>
+                              </label>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )}
 
-                    <div className="flex flex-wrap items-center justify-between gap-10">
-                      {!isLand && (
-                        <div className="flex flex-wrap gap-10">
-                          <label className="flex items-center gap-3 cursor-pointer group">
-                            <div 
-                              className={`w-12 h-6 rounded-full relative transition-all ${filters.hasFurniture === true ? 'bg-blue-600' : 'bg-slate-200'}`}
-                              onClick={() => setFilters({...filters, hasFurniture: filters.hasFurniture === true ? null : true})}
-                            >
-                              <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${filters.hasFurniture === true ? 'left-7' : 'left-1'}`}></div>
-                            </div>
-                            <span className="text-xs font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600">Мебель</span>
-                          </label>
-                          <label className="flex items-center gap-3 cursor-pointer group">
-                            <div 
-                              className={`w-12 h-6 rounded-full relative transition-all ${filters.hasRepair === true ? 'bg-indigo-600' : 'bg-slate-200'}`}
-                              onClick={() => setFilters({...filters, hasRepair: filters.hasRepair === true ? null : true})}
-                            >
-                              <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${filters.hasRepair === true ? 'left-7' : 'left-1'}`}></div>
-                            </div>
-                            <span className="text-xs font-black text-slate-400 uppercase tracking-widest group-hover:text-indigo-600">С ремонтом</span>
-                          </label>
-                          <label className="flex items-center gap-3 cursor-pointer group">
-                            <div 
-                              className={`w-12 h-6 rounded-full relative transition-colors ${filters.isEOselya === true ? 'bg-emerald-600' : 'bg-slate-200'}`}
-                              onClick={() => setFilters({...filters, isEOselya: filters.isEOselya === true ? null : true})}
-                            >
-                              <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${filters.isEOselya === true ? 'left-7' : 'left-1'}`}></div>
-                            </div>
-                            <span className="text-xs font-black text-slate-400 uppercase tracking-widest group-hover:text-emerald-600">єОселя</span>
-                          </label>
-                        </div>
-                      )}
-                      
-                      <div className="flex gap-4 ml-auto">
-                        <button 
-                          onClick={resetFilters}
-                          className="px-8 py-4 bg-slate-100 text-slate-500 font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-slate-200 transition"
-                        >
-                          Сбросить
-                        </button>
-                        <div className="px-8 py-4 bg-slate-900 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl flex items-center gap-3">
-                          <Search className="w-4 h-4" /> Найдено: {filteredProperties.length}
-                        </div>
+                    <div className="flex flex-wrap items-center justify-end gap-4">
+                      <button 
+                        onClick={resetFilters}
+                        className="px-8 py-4 bg-slate-100 text-slate-500 font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-slate-200 transition"
+                      >
+                        Сбросить
+                      </button>
+                      <div className="px-8 py-4 bg-slate-900 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl flex items-center gap-3">
+                        <Search className="w-4 h-4" /> Найдено: {filteredProperties.length}
                       </div>
                     </div>
                   </div>
