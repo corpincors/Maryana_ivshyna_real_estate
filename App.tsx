@@ -13,11 +13,29 @@ import MultiSelect from './components/MultiSelect';
 import PropertyDetailPage from './src/pages/PropertyDetailPage';
 
 const App: React.FC = () => {
-  const [properties, setProperties] = useState<Property[]>(INITIAL_PROPERTIES);
+  // Загрузка данных из localStorage или использование INITIAL_PROPERTIES
+  const [properties, setProperties] = useState<Property[]>(() => {
+    try {
+      const savedProperties = localStorage.getItem('realtyProperties');
+      return savedProperties ? JSON.parse(savedProperties) : INITIAL_PROPERTIES;
+    } catch (error) {
+      console.error("Failed to load properties from localStorage:", error);
+      return INITIAL_PROPERTIES;
+    }
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Сохранение данных в localStorage при каждом изменении properties
+  useEffect(() => {
+    try {
+      localStorage.setItem('realtyProperties', JSON.stringify(properties));
+    } catch (error) {
+      console.error("Failed to save properties to localStorage:", error);
+    }
+  }, [properties]);
 
   const isClientMode = useMemo(() => {
     const params = new URLSearchParams(location.search);
@@ -253,7 +271,7 @@ const App: React.FC = () => {
                           <select 
                             value={filters.landType}
                             onChange={(e) => setFilters({...filters, landType: e.target.value})}
-                            className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold"
+                            className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
                           >
                             <option value="Любой">Любой тип</option>
                             {LAND_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
@@ -267,7 +285,7 @@ const App: React.FC = () => {
                           <select 
                             value={filters.rooms}
                             onChange={(e) => setFilters({...filters, rooms: e.target.value})}
-                            className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold"
+                            className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
                           >
                             <option value="Любое">Любое</option>
                             {ROOMS_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
@@ -296,14 +314,14 @@ const App: React.FC = () => {
                         </div>
                         <div className="space-y-3">
                           <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Тип дома</label>
-                          <select value={filters.houseType} onChange={(e) => setFilters({...filters, houseType: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
+                          <select value={filters.houseType} onChange={(e) => setFilters({...filters, houseType: e.target.value})} className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition">
                             <option value="Любой">Любой тип</option>
                             {HOUSE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                           </select>
                         </div>
                         <div className="space-y-3">
                           <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Вид ремонта</label>
-                          <select value={filters.repairType} onChange={(e) => setFilters({...filters, repairType: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
+                          <select value={filters.repairType} onChange={(e) => setFilters({...filters, repairType: e.target.value})} className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition">
                             <option value="Любой">Любой ремонт</option>
                             {REPAIR_TYPES.map(r => <option key={r} value={r}>{r}</option>)}
                           </select>
