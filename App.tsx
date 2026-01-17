@@ -4,7 +4,7 @@ import { Property, FilterState, PropertyCategory } from './types';
 import { 
   DISTRICTS, ROOMS_OPTIONS, LAND_TYPES, HOUSE_TYPES, 
   REPAIR_TYPES, HOUSING_CLASSES, HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, 
-  COMM_OPTIONS, INFRA_OPTIONS, CATEGORIES 
+  COMM_OPTIONS, INFRA_OPTIONS, CATEGORIES, INITIAL_DISTRICTS // Импортируем INITIAL_DISTRICTS
 } from './constants.tsx';
 import { PlusCircle, Search, Plus, Home, ChevronDown, X } from './components/Icons';
 import PropertyCard from './components/PropertyCard';
@@ -50,27 +50,37 @@ const App: React.FC = () => {
 
   const availableDistricts = useMemo(() => {
     const propertyDistricts = properties.map(p => p.district);
-    const combined = [...DISTRICTS, ...propertyDistricts];
+    const combined = [...INITIAL_DISTRICTS, ...propertyDistricts]; // Используем INITIAL_DISTRICTS
     return Array.from(new Set(combined.filter(d => d.trim() !== ''))).sort();
   }, [properties]);
 
-  const handleRemoveCustomDistrict = (districtToRemove: string) => {
-    // Удаляем район из списка доступных районов
-    // В реальном приложении это может потребовать обновления db.json или другого хранилища
-    // Для json-server, если район не используется ни в одном объекте, он фактически "исчезнет" из availableDistricts
-    // при следующей загрузке, если он не был в INITIAL_DISTRICTS.
-    // Здесь мы просто обновляем список, чтобы он не отображался в выпадающем списке сразу.
-    // Если район используется в объектах, он все равно будет отображаться в availableDistricts
-    // до тех пор, пока все объекты, использующие его, не будут удалены или изменены.
-    const updatedProperties = properties.map(p => 
-      p.district === districtToRemove ? { ...p, district: '' } : p
-    );
-    setProperties(updatedProperties); // Обновляем состояние, чтобы пересчитать availableDistricts
-    // В идеале, если район был добавлен вручную и не используется, его нужно удалить из какого-то глобального списка
-    // Но так как json-server динамически генерирует список из существующих объектов,
-    // удаление его из объектов - это основной способ его "скрыть".
-    // Если вы хотите полностью удалить его из `DISTRICTS` в `constants.tsx`, это потребует прямого редактирования файла,
-    // что не является динамическим поведением.
+  const handleRemoveCustomDistrict = async (districtToRemove: string) => {
+    if (!window.confirm(`Вы уверены, что хотите удалить район "${districtToRemove}"? Все объекты, использующие его, будут обновлены.`)) {
+      return;
+    }
+  
+    try {
+      // Находим все объекты, использующие этот район
+      const propertiesToUpdate = properties.filter(p => p.district === districtToRemove);
+  
+      // Обновляем каждый такой объект, устанавливая район в пустую строку
+      const updatePromises = propertiesToUpdate.map(async (p) => {
+        const updatedProperty = { ...p, district: '' };
+        const response = await fetch(`${API_URL}/${p.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedProperty),
+        });
+        if (!response.ok) throw new Error(`Failed to update property ${p.id}`);
+        return response.json();
+      });
+  
+      await Promise.all(updatePromises);
+      fetchProperties(); // Перезагружаем данные после всех обновлений
+    } catch (error) {
+      console.error("Error removing custom district:", error);
+      alert("Ошибка при удалении района. Пожалуйста, проверьте консоль.");
+    }
   };
 
   const [filters, setFilters] = useState<FilterState>({
@@ -360,26 +370,26 @@ const App: React.FC = () => {
                           </div>
                         </div>
                         <div className="space-y-3">
-                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Тип дома</label>
+                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Тип дома</label>
                           <select value={filters.houseType} onChange={(e) => setFilters({...filters, houseType: e.target.value})} className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition">
                             <option value="Любой">Любой тип</option>
                             {HOUSE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                           </select>
                         </div>
                         <div className="space-y-3">
-                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Класс жилья</label>
+                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Класс жилья</label>
                           <select value={filters.housingClass} onChange={(e) => setFilters({...filters, housingClass: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
                             {HOUSING_CLASSES.map(c => <option key={c} value={c}>{c}</option>)}
                           </select>
                         </div>
                         <div className="space-y-3">
-                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Вид ремонта</label>
+                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Вид ремонта</label>
                           <select value={filters.repairType} onChange={(e) => setFilters({...filters, repairType: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
                             {REPAIR_TYPES.map(r => <option key={r} value={r}>{r}</option>)}
                           </select>
                         </div>
                         <div className="space-y-3">
-                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Отопление</label>
+                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Отопление</label>
                           <select value={filters.heating} onChange={(e) => setFilters({...filters, heating: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
                             {HEATING_OPTIONS.map(h => <option key={h} value={h}>{h}</option>)}
                           </select>
@@ -391,9 +401,9 @@ const App: React.FC = () => {
                   {!isLand && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-8 border-y border-slate-50">
                       <MultiSelect label="Техника" prefix="Т" options={TECH_OPTIONS} selected={filters.tech} onChange={(s) => setFilters({...filters, tech: s})} />
-                      <MultiSelect label="Комфорт" prefix="К" options={COMFORT_OPTIONS} selected={filters.comfort} onChange={(s) => setFormData(p => ({...p, comfort: s}))} />
-                      <MultiSelect label="Коммуникации" prefix="К" options={COMM_OPTIONS} selected={filters.comm} onChange={(s) => setFormData(p => ({...p, comm: s}))} />
-                      <MultiSelect label="Инфраструктура" prefix="И" options={INFRA_OPTIONS} selected={filters.infra} onChange={(s) => setFormData(p => ({...p, infra: s}))} />
+                      <MultiSelect label="Комфорт" prefix="К" options={COMFORT_OPTIONS} selected={filters.comfort} onChange={(s) => setFilters(p => ({...p, comfort: s}))} />
+                      <MultiSelect label="Коммуникации" prefix="К" options={COMM_OPTIONS} selected={filters.comm} onChange={(s) => setFilters(p => ({...p, comm: s}))} />
+                      <MultiSelect label="Инфраструктура" prefix="И" options={INFRA_OPTIONS} selected={filters.infra} onChange={(s) => setFilters(p => ({...p, infra: s}))} />
                     </div>
                   )}
 
@@ -480,7 +490,7 @@ const App: React.FC = () => {
         onSave={handleSaveProperty}
         editingProperty={editingProperty}
         availableDistricts={availableDistricts}
-        onRemoveCustomDistrict={handleRemoveCustomDistrict} // Передаем функцию
+        onRemoveCustomDistrict={handleRemoveCustomDistrict}
       />
     </div>
   );

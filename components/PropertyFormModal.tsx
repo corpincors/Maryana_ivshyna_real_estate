@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Property, PropertyCategory } from '../types';
 import { X, Home, Maximize2, Layers, Camera, Plus, Phone, Trash2 } from './Icons';
 import MultiSelect from './MultiSelect';
-import EditableDistrictList from '../src/components/EditableDistrictList'; // Исправленный путь импорта
+import SingleSelectWithDelete from './SingleSelectWithDelete'; // Импортируем новый компонент
 import { 
   ROOMS_OPTIONS, LAND_TYPES, HOUSE_TYPES, REPAIR_TYPES, HOUSING_CLASSES,
-  HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, COMM_OPTIONS, INFRA_OPTIONS 
+  HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, COMM_OPTIONS, INFRA_OPTIONS,
+  INITIAL_DISTRICTS // Импортируем INITIAL_DISTRICTS
 } from '../constants.tsx';
 
 interface PropertyFormModalProps {
@@ -14,7 +15,7 @@ interface PropertyFormModalProps {
   onSave: (property: Property) => void;
   editingProperty: Property | null;
   availableDistricts: string[];
-  onRemoveCustomDistrict: (district: string) => void; // Добавляем пропс для удаления кастомных районов
+  onRemoveCustomDistrict: (district: string) => void;
 }
 
 const PropertyFormModal: React.FC<PropertyFormModalProps> = ({ 
@@ -34,7 +35,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     address: '',
     ownerPhone: '',
     totalArea: 0,
-    rooms: '1', // Изменено на '1' для числового ввода по умолчанию
+    rooms: '1',
     houseType: HOUSE_TYPES[0],
     housingClass: 'Комфорт',
     hasFurniture: false,
@@ -49,7 +50,6 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     description: '',
     imageUrls: []
   });
-  const [customDistricts, setCustomDistricts] = useState<string[]>([]); // Состояние для районов, добавленных вручную
 
   useEffect(() => {
     if (editingProperty) {
@@ -63,7 +63,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
         address: '',
         ownerPhone: '',
         totalArea: 0,
-        rooms: '1', // Изменено на '1' для числового ввода по умолчанию
+        rooms: '1',
         houseType: HOUSE_TYPES[0],
         housingClass: 'Комфорт',
         hasFurniture: false,
@@ -81,17 +81,6 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     }
   }, [editingProperty, isOpen]);
 
-  // Обновляем список customDistricts при изменении availableDistricts
-  useEffect(() => {
-    const initialDistricts = [
-      'Киевский', 'Приморский', 'Суворовский', 'Центральный', 'Малиновский',
-      'Пересыпский', 'Хаджибейский', 'Аркадия', 'Фонтан', 'Черемушки',
-      'Таирова', 'Поселок Котовского'
-    ];
-    const newCustomDistricts = availableDistricts.filter(d => !initialDistricts.includes(d));
-    setCustomDistricts(newCustomDistricts);
-  }, [availableDistricts]);
-
   if (!isOpen) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -101,13 +90,16 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     if (type === 'checkbox') {
       val = (e.target as HTMLInputElement).checked;
     } else if (name === 'rooms') {
-      // Для поля 'rooms' всегда сохраняем значение как строку
       val = String(value);
     } else if (type === 'number') {
       val = Number(value);
     }
     
     setFormData(prev => ({ ...prev, [name]: val }));
+  };
+
+  const handleDistrictChange = (value: string) => {
+    setFormData(prev => ({ ...prev, district: value }));
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +123,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     }));
     
     if (fileInputRef.current) {
-      fileInputRef.value = '';
+      fileInputRef.current.value = '';
     }
   };
 
@@ -240,20 +232,14 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
               </select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Район</label>
-              <input 
-                list="districts-list"
-                name="district"
-                value={formData.district}
-                onChange={handleChange}
-                placeholder="Выберите или введите..."
-                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
-              />
-              <datalist id="districts-list">
-                {availableDistricts.map(d => <option key={d} value={d}>{d}</option>)}
-              </datalist>
-            </div>
+            <SingleSelectWithDelete
+              label="Район"
+              options={availableDistricts}
+              initialOptions={INITIAL_DISTRICTS}
+              selected={formData.district || ''}
+              onChange={handleDistrictChange}
+              onRemoveOption={onRemoveCustomDistrict}
+            />
 
             <div className="space-y-2">
               <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Цена ($)</label>
@@ -268,8 +254,8 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
             </div>
           </section>
 
-          {/* Custom Districts List */}
-          {customDistricts.length > 0 && (
+          {/* Custom Districts List - REMOVED */}
+          {/* {customDistricts.length > 0 && (
             <section className="space-y-4">
               <div className="flex items-center gap-3 text-slate-900">
                 <Trash2 className="w-5 h-5" />
@@ -277,7 +263,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
               </div>
               <EditableDistrictList districts={customDistricts} onRemove={onRemoveCustomDistrict} />
             </section>
-          )}
+          )} */}
 
           {/* SENSITIVE / OWNER INFO */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-blue-50/50 p-8 rounded-[2.5rem]">
@@ -448,7 +434,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                 />
                 <MultiSelect 
                   label="Инфраструктура" 
-                  prefix="И" 
+                  prefix="Выбрано" 
                   options={INFRA_OPTIONS} 
                   selected={formData.infra || []} 
                   onChange={(s) => setFormData(p => ({...p, infra: s}))} 

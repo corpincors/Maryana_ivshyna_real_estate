@@ -1,4 +1,3 @@
-
 import { Property } from './types';
 
 export const CATEGORIES = [
@@ -9,8 +8,7 @@ export const CATEGORIES = [
   { id: 'land', label: 'Земельные участки' },
 ];
 
-// Default list of districts. New ones added by user will be merged dynamically in App.tsx
-export const DISTRICTS = [
+export const INITIAL_DISTRICTS = [ // Экспортируем начальный список районов
   'Киевский', 
   'Приморский', 
   'Суворовский', 
@@ -24,6 +22,9 @@ export const DISTRICTS = [
   'Таирова',
   'Поселок Котовского'
 ];
+
+// Default list of districts. New ones added by user will be merged dynamically in App.tsx
+export const DISTRICTS = INITIAL_DISTRICTS; // Теперь DISTRICTS ссылается на INITIAL_DISTRICTS
 
 export const ROOMS_OPTIONS = ['1', '2', '3', '4', '5+', 'Студия'];
 export const LAND_TYPES = ['ИЖС', 'СНТ', 'ОСГ', 'Садоводство', 'Коммерческое использование'];
