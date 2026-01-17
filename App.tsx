@@ -54,6 +54,25 @@ const App: React.FC = () => {
     return Array.from(new Set(combined.filter(d => d.trim() !== ''))).sort();
   }, [properties]);
 
+  const handleRemoveCustomDistrict = (districtToRemove: string) => {
+    // Удаляем район из списка доступных районов
+    // В реальном приложении это может потребовать обновления db.json или другого хранилища
+    // Для json-server, если район не используется ни в одном объекте, он фактически "исчезнет" из availableDistricts
+    // при следующей загрузке, если он не был в INITIAL_DISTRICTS.
+    // Здесь мы просто обновляем список, чтобы он не отображался в выпадающем списке сразу.
+    // Если район используется в объектах, он все равно будет отображаться в availableDistricts
+    // до тех пор, пока все объекты, использующие его, не будут удалены или изменены.
+    const updatedProperties = properties.map(p => 
+      p.district === districtToRemove ? { ...p, district: '' } : p
+    );
+    setProperties(updatedProperties); // Обновляем состояние, чтобы пересчитать availableDistricts
+    // В идеале, если район был добавлен вручную и не используется, его нужно удалить из какого-то глобального списка
+    // Но так как json-server динамически генерирует список из существующих объектов,
+    // удаление его из объектов - это основной способ его "скрыть".
+    // Если вы хотите полностью удалить его из `DISTRICTS` в `constants.tsx`, это потребует прямого редактирования файла,
+    // что не является динамическим поведением.
+  };
+
   const [filters, setFilters] = useState<FilterState>({
     category: 'apartments',
     district: 'Любой',
@@ -348,10 +367,21 @@ const App: React.FC = () => {
                           </select>
                         </div>
                         <div className="space-y-3">
+                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Класс жилья</label>
+                          <select value={filters.housingClass} onChange={(e) => setFilters({...filters, housingClass: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
+                            {HOUSING_CLASSES.map(c => <option key={c} value={c}>{c}</option>)}
+                          </select>
+                        </div>
+                        <div className="space-y-3">
                           <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Вид ремонта</label>
-                          <select value={filters.repairType} onChange={(e) => setFilters({...filters, repairType: e.target.value})} className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition">
-                            <option value="Любой">Любой ремонт</option>
+                          <select value={filters.repairType} onChange={(e) => setFilters({...filters, repairType: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
                             {REPAIR_TYPES.map(r => <option key={r} value={r}>{r}</option>)}
+                          </select>
+                        </div>
+                        <div className="space-y-3">
+                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Отопление</label>
+                          <select value={filters.heating} onChange={(e) => setFilters({...filters, heating: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
+                            {HEATING_OPTIONS.map(h => <option key={h} value={h}>{h}</option>)}
                           </select>
                         </div>
                       </>
@@ -361,9 +391,9 @@ const App: React.FC = () => {
                   {!isLand && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-8 border-y border-slate-50">
                       <MultiSelect label="Техника" prefix="Т" options={TECH_OPTIONS} selected={filters.tech} onChange={(s) => setFilters({...filters, tech: s})} />
-                      <MultiSelect label="Комфорт" prefix="К" options={COMFORT_OPTIONS} selected={filters.comfort} onChange={(s) => setFilters({...filters, comfort: s})} />
-                      <MultiSelect label="Коммуникации" prefix="К" options={COMM_OPTIONS} selected={filters.comm} onChange={(s) => setFilters({...filters, comm: s})} />
-                      <MultiSelect label="Инфраструктура" prefix="И" options={INFRA_OPTIONS} selected={filters.infra} onChange={(s) => setFilters({...filters, infra: s})} />
+                      <MultiSelect label="Комфорт" prefix="К" options={COMFORT_OPTIONS} selected={filters.comfort} onChange={(s) => setFormData(p => ({...p, comfort: s}))} />
+                      <MultiSelect label="Коммуникации" prefix="К" options={COMM_OPTIONS} selected={filters.comm} onChange={(s) => setFormData(p => ({...p, comm: s}))} />
+                      <MultiSelect label="Инфраструктура" prefix="И" options={INFRA_OPTIONS} selected={filters.infra} onChange={(s) => setFormData(p => ({...p, infra: s}))} />
                     </div>
                   )}
 
@@ -390,7 +420,7 @@ const App: React.FC = () => {
                         </label>
                         <label className="flex items-center gap-3 cursor-pointer group">
                           <div 
-                            className={`w-12 h-6 rounded-full relative transition-all ${filters.isEOselya === true ? 'bg-emerald-600' : 'bg-slate-200'}`}
+                            className={`w-12 h-6 rounded-full relative transition-colors ${filters.isEOselya === true ? 'bg-emerald-600' : 'bg-slate-200'}`}
                             onClick={() => setFilters({...filters, isEOselya: filters.isEOselya === true ? null : true})}
                           >
                             <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${filters.isEOselya === true ? 'left-7' : 'left-1'}`}></div>
@@ -435,7 +465,7 @@ const App: React.FC = () => {
                   <div className="bg-slate-50 group-hover:bg-blue-600 p-8 rounded-full transition-all duration-500 mb-6 group-hover:rotate-90">
                     <Plus className="w-10 h-10 text-slate-300 group-hover:text-white" />
                   </div>
-                  <p className="font-black text-slate-400 group-hover:text-blue-600 uppercase text-[10px] tracking-[0.3em]">Новый объект</p>
+                  <p className="font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600">Новый объект</p>
                 </div>
               )}
             </div>
@@ -450,6 +480,7 @@ const App: React.FC = () => {
         onSave={handleSaveProperty}
         editingProperty={editingProperty}
         availableDistricts={availableDistricts}
+        onRemoveCustomDistrict={handleRemoveCustomDistrict} // Передаем функцию
       />
     </div>
   );

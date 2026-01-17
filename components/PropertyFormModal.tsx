@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Property, PropertyCategory } from '../types';
-import { X, Home, Maximize2, Layers, Camera, Plus, Phone } from './Icons';
+import { X, Home, Maximize2, Layers, Camera, Plus, Phone, Trash2 } from './Icons';
 import MultiSelect from './MultiSelect';
+import EditableDistrictList from './EditableDistrictList'; // Импортируем новый компонент
 import { 
   ROOMS_OPTIONS, LAND_TYPES, HOUSE_TYPES, REPAIR_TYPES, HOUSING_CLASSES,
   HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, COMM_OPTIONS, INFRA_OPTIONS 
@@ -13,6 +14,7 @@ interface PropertyFormModalProps {
   onSave: (property: Property) => void;
   editingProperty: Property | null;
   availableDistricts: string[];
+  onRemoveCustomDistrict: (district: string) => void; // Добавляем пропс для удаления кастомных районов
 }
 
 const PropertyFormModal: React.FC<PropertyFormModalProps> = ({ 
@@ -20,7 +22,8 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
   onClose, 
   onSave, 
   editingProperty,
-  availableDistricts
+  availableDistricts,
+  onRemoveCustomDistrict
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState<Partial<Property>>({
@@ -46,6 +49,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     description: '',
     imageUrls: []
   });
+  const [customDistricts, setCustomDistricts] = useState<string[]>([]); // Состояние для районов, добавленных вручную
 
   useEffect(() => {
     if (editingProperty) {
@@ -76,6 +80,17 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
       });
     }
   }, [editingProperty, isOpen]);
+
+  // Обновляем список customDistricts при изменении availableDistricts
+  useEffect(() => {
+    const initialDistricts = [
+      'Киевский', 'Приморский', 'Суворовский', 'Центральный', 'Малиновский',
+      'Пересыпский', 'Хаджибейский', 'Аркадия', 'Фонтан', 'Черемушки',
+      'Таирова', 'Поселок Котовского'
+    ];
+    const newCustomDistricts = availableDistricts.filter(d => !initialDistricts.includes(d));
+    setCustomDistricts(newCustomDistricts);
+  }, [availableDistricts]);
 
   if (!isOpen) return null;
 
@@ -253,6 +268,17 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
             </div>
           </section>
 
+          {/* Custom Districts List */}
+          {customDistricts.length > 0 && (
+            <section className="space-y-4">
+              <div className="flex items-center gap-3 text-slate-900">
+                <Trash2 className="w-5 h-5" />
+                <h3 className="text-sm font-black uppercase tracking-widest">Удалить добавленные районы</h3>
+              </div>
+              <EditableDistrictList districts={customDistricts} onRemove={onRemoveCustomDistrict} />
+            </section>
+          )}
+
           {/* SENSITIVE / OWNER INFO */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-blue-50/50 p-8 rounded-[2.5rem]">
              <div className="space-y-2">
@@ -333,7 +359,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Общая пл. / Кухни</label>
+                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Общая пл. / Кухни</label>
                   <div className="flex gap-2">
                     <input type="number" name="totalArea" placeholder="85" value={formData.totalArea || ''} onChange={handleChange} className="w-1/2 bg-slate-50 rounded-2xl p-4 outline-none font-bold" required />
                     <input type="number" name="kitchenArea" placeholder="15" value={formData.kitchenArea || ''} onChange={handleChange} className="w-1/2 bg-slate-50 rounded-2xl p-4 outline-none font-bold" />
