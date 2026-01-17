@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Property, PropertyCategory } from '../types';
 import { X, Home, Maximize2, Layers, Camera, Plus, Phone, Trash2 } from './Icons';
 import MultiSelect from './MultiSelect';
-import SingleSelectWithDelete from './SingleSelectWithDelete'; // Импортируем новый компонент
+import SingleSelectWithDelete from './SingleSelectWithDelete';
 import { 
   ROOMS_OPTIONS, LAND_TYPES, HOUSE_TYPES, REPAIR_TYPES, HOUSING_CLASSES,
   HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, COMM_OPTIONS, INFRA_OPTIONS,
-  INITIAL_DISTRICTS // Импортируем INITIAL_DISTRICTS
+  INITIAL_DISTRICTS
 } from '../constants.tsx';
 
 interface PropertyFormModalProps {
@@ -132,7 +132,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
   };
 
   const removePhoto = (index: number) => {
-    setFormData(prev => ({ ...prev, imageUrls: (prev.imageUrls || []).filter((_, i) => i !== index) }));
+    setFormData(prev => ({ ...prev, imageUrls: (prev.imageUrls || []).filter((_: string, i: number) => i !== index) }));
   };
 
   const handleToggle = (name: keyof Property) => {
@@ -179,7 +179,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {formData.imageUrls?.map((url, idx) => (
+              {formData.imageUrls?.map((url: string, idx: number) => (
                 <div key={idx} className="aspect-square rounded-2xl overflow-hidden relative group shadow-sm border border-slate-100">
                   <img src={url} className="w-full h-full object-cover" alt="" />
                   <button 
@@ -254,17 +254,6 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
             </div>
           </section>
 
-          {/* Custom Districts List - REMOVED */}
-          {/* {customDistricts.length > 0 && (
-            <section className="space-y-4">
-              <div className="flex items-center gap-3 text-slate-900">
-                <Trash2 className="w-5 h-5" />
-                <h3 className="text-sm font-black uppercase tracking-widest">Удалить добавленные районы</h3>
-              </div>
-              <EditableDistrictList districts={customDistricts} onRemove={onRemoveCustomDistrict} />
-            </section>
-          )} */}
-
           {/* SENSITIVE / OWNER INFO */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-blue-50/50 p-8 rounded-[2.5rem]">
              <div className="space-y-2">
@@ -310,7 +299,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                 <div className="space-y-2">
                   <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Тип земли</label>
                   <select name="landType" value={formData.landType || ''} onChange={handleChange} className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold">
-                    {LAND_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                    {LAND_TYPES.map((t: string) => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
               </div>
@@ -354,25 +343,25 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                 <div className="space-y-2">
                   <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Тип дома</label>
                   <select name="houseType" value={formData.houseType} onChange={handleChange} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
-                    {HOUSE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                    {HOUSE_TYPES.map((t: string) => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Класс жилья</label>
                   <select name="housingClass" value={formData.housingClass} onChange={handleChange} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
-                    {HOUSING_CLASSES.map(c => <option key={c} value={c}>{c}</option>)}
+                    {HOUSING_CLASSES.map((c: string) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Вид ремонта</label>
                   <select name="repairType" value={formData.repairType} onChange={handleChange} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
-                    {REPAIR_TYPES.map(r => <option key={r} value={r}>{r}</option>)}
+                    {REPAIR_TYPES.map((r: string) => <option key={r} value={r}>{r}</option>)}
                   </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Отопление</label>
                   <select name="heating" value={formData.heating} onChange={handleChange} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
-                    {HEATING_OPTIONS.map(h => <option key={h} value={h}>{h}</option>)}
+                    {HEATING_OPTIONS.map((h: string) => <option key={h} value={h}>{h}</option>)}
                   </select>
                 </div>
               </div>
@@ -403,7 +392,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
           </section>
 
           {/* MULTI SELECTS */}
-          {!isLand && ( // Условное отображение для секции "Дополнительные опции"
+          {!isLand && (
             <section className="space-y-10">
               <div className="flex items-center gap-3 text-emerald-600">
                 <div className="bg-emerald-50 p-2 rounded-xl"><Layers className="w-5 h-5" /></div>
@@ -416,28 +405,28 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                   prefix="Выбрано" 
                   options={TECH_OPTIONS} 
                   selected={formData.tech || []} 
-                  onChange={(s) => setFormData(p => ({...p, tech: s}))} 
+                  onChange={(s: string[]) => setFormData(p => ({...p, tech: s}))} 
                 />
                 <MultiSelect 
                   label="Комфорт" 
                   prefix="Выбрано" 
                   options={COMFORT_OPTIONS} 
                   selected={formData.comfort || []} 
-                  onChange={(s) => setFormData(p => ({...p, comfort: s}))} 
+                  onChange={(s: string[]) => setFormData(p => ({...p, comfort: s}))} 
                 />
                 <MultiSelect 
                   label="Коммуникации" 
                   prefix="Выбрано" 
                   options={COMM_OPTIONS} 
                   selected={formData.comm || []} 
-                  onChange={(s) => setFormData(p => ({...p, comm: s}))} 
+                  onChange={(s: string[]) => setFormData(p => ({...p, comm: s}))} 
                 />
                 <MultiSelect 
                   label="Инфраструктура" 
                   prefix="Выбрано" 
                   options={INFRA_OPTIONS} 
                   selected={formData.infra || []} 
-                  onChange={(s) => setFormData(p => ({...p, infra: s}))} 
+                  onChange={(s: string[]) => setFormData(p => ({...p, infra: s}))} 
                 />
               </div>
             </section>

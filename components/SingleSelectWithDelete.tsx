@@ -49,7 +49,7 @@ const SingleSelectWithDelete: React.FC<SingleSelectWithDeleteProps> = ({
     onRemoveOption(option);
   };
 
-  const filteredOptions = options.filter(option =>
+  const filteredOptions = options.filter((option: string) =>
     option.toLowerCase().includes(selected.toLowerCase())
   );
 
@@ -85,7 +85,7 @@ const SingleSelectWithDelete: React.FC<SingleSelectWithDeleteProps> = ({
         <div className="absolute z-50 top-full left-0 w-full bg-white border border-slate-100 shadow-2xl rounded-2xl mt-2 p-5 max-h-64 overflow-y-auto custom-scrollbar animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="grid gap-4">
             {filteredOptions.length > 0 ? (
-              filteredOptions.map(option => (
+              filteredOptions.map((option: string) => (
                 <div key={option} className="flex items-center justify-between gap-3 text-xs font-semibold cursor-pointer group">
                   <span
                     onClick={() => handleSelect(option)}
@@ -96,7 +96,7 @@ const SingleSelectWithDelete: React.FC<SingleSelectWithDeleteProps> = ({
                   {!initialOptions.includes(option) && (
                     <button
                       type="button"
-                      onClick={(e) => handleRemove(e, option)}
+                      onClick={(e: React.MouseEvent) => handleRemove(e, option)}
                       className="p-1 bg-slate-50 rounded-full hover:bg-red-100 text-slate-400 hover:text-red-600 transition"
                       title="Удалить район"
                     >

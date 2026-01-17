@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from './Icons';
 
@@ -34,7 +33,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 
   const toggleOption = (option: string) => {
     if (selected.includes(option)) {
-      onChange(selected.filter(item => item !== option));
+      onChange(selected.filter((item: string) => item !== option));
     } else {
       onChange([...selected, option]);
     }
@@ -69,7 +68,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       {isOpen && (
         <div className="absolute z-50 top-full left-0 w-full bg-white border border-slate-100 shadow-2xl rounded-2xl mt-2 p-5 max-h-64 overflow-y-auto custom-scrollbar animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="grid gap-4">
-            {options.map(option => (
+            {options.map((option: string) => (
               <label key={option} className="flex items-center gap-3 text-xs font-semibold cursor-pointer group">
                 <input 
                   type="checkbox" 

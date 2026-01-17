@@ -22,7 +22,7 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({ properties }) =
   const [isClientView, setIsClientView] = useState(false);
 
   useEffect(() => {
-    const foundProperty = properties.find(p => p.id === id);
+    const foundProperty = properties.find((p: Property) => p.id === id);
     setProperty(foundProperty || null);
 
     const params = new URLSearchParams(window.location.search);
@@ -47,11 +47,11 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({ properties }) =
   const categoryLabel = CATEGORIES.find(cat => cat.id === property.category)?.label || property.category;
 
   const nextImg = () => {
-    setCurrentImg((prev) => (prev + 1) % property.imageUrls.length);
+    setCurrentImg((prev: number) => (prev + 1) % property.imageUrls.length);
   };
 
   const prevImg = () => {
-    setCurrentImg((prev) => (prev - 1 + property.imageUrls.length) % property.imageUrls.length);
+    setCurrentImg((prev: number) => (prev - 1 + property.imageUrls.length) % property.imageUrls.length);
   };
 
   return (
@@ -91,7 +91,7 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({ properties }) =
                 <ChevronRight className="w-6 h-6" />
               </button>
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
-                {property.imageUrls.map((_, i) => (
+                {property.imageUrls.map((_: string, i: number) => (
                   <div key={i} className={`h-1.5 rounded-full transition-all ${i === currentImg ? 'w-6 bg-white' : 'w-2 bg-white/50'}`}></div>
                 ))}
               </div>
@@ -171,7 +171,7 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({ properties }) =
               <div>
                 <h4 className="font-bold text-slate-800 mb-3">Бытовая техника:</h4>
                 <ul className="space-y-1 text-sm text-slate-600">
-                  {property.tech.map(item => <li key={item}>• {item}</li>)}
+                  {property.tech.map((item: string) => <li key={item}>• {item}</li>)}
                 </ul>
               </div>
             )}
@@ -179,7 +179,7 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({ properties }) =
               <div>
                 <h4 className="font-bold text-slate-800 mb-3">Комфорт:</h4>
                 <ul className="space-y-1 text-sm text-slate-600">
-                  {property.comfort.map(item => <li key={item}>• {item}</li>)}
+                  {property.comfort.map((item: string) => <li key={item}>• {item}</li>)}
                 </ul>
               </div>
             )}
@@ -187,7 +187,7 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({ properties }) =
               <div>
                 <h4 className="font-bold text-slate-800 mb-3">Коммуникации:</h4>
                 <ul className="space-y-1 text-sm text-slate-600">
-                  {property.comm.map(item => <li key={item}>• {item}</li>)}
+                  {property.comm.map((item: string) => <li key={item}>• {item}</li>)}
                 </ul>
               </div>
             )}
@@ -195,7 +195,7 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({ properties }) =
               <div>
                 <h4 className="font-bold text-slate-800 mb-3">Инфраструктура:</h4>
                 <ul className="space-y-1 text-sm text-slate-600">
-                  {property.infra.map(item => <li key={item}>• {item}</li>)}
+                  {property.infra.map((item: string) => <li key={item}>• {item}</li>)}
                 </ul>
               </div>
             )}

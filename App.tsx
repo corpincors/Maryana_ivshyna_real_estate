@@ -11,8 +11,8 @@ import PropertyCard from './components/PropertyCard';
 import PropertyFormModal from './components/PropertyFormModal';
 import MultiSelect from './components/MultiSelect';
 import PropertyDetailPage from './src/pages/PropertyDetailPage';
-import LoginPage from '@/src/pages/LoginPage'; // Исправленный путь
-import { useAuth } from '@/src/context/AuthContext'; // Исправленный путь
+import LoginPage from '@/src/pages/LoginPage';
+import { useAuth } from '@/src/context/AuthContext';
 
 const API_URL = '/api/properties';
 
@@ -49,7 +49,7 @@ const App: React.FC = () => {
   const isDetailPage = useMemo(() => location.pathname.startsWith('/property/'), [location.pathname]);
 
   const availableDistricts = useMemo(() => {
-    const propertyDistricts = properties.map(p => p.district);
+    const propertyDistricts = properties.map((p: Property) => p.district);
     const combined = [...INITIAL_DISTRICTS, ...propertyDistricts];
     return Array.from(new Set(combined.filter(d => d.trim() !== ''))).sort();
   }, [properties]);
@@ -60,9 +60,9 @@ const App: React.FC = () => {
     }
   
     try {
-      const propertiesToUpdate = properties.filter(p => p.district === districtToRemove);
+      const propertiesToUpdate = properties.filter((p: Property) => p.district === districtToRemove);
   
-      const updatePromises = propertiesToUpdate.map(async (p) => {
+      const updatePromises = propertiesToUpdate.map(async (p: Property) => {
         const updatedProperty = { ...p, district: '' };
         const response = await fetch(`${API_URL}/${p.id}`, {
           method: 'PUT',
@@ -116,7 +116,7 @@ const App: React.FC = () => {
   const filteredProperties = useMemo(() => {
     const lowerCaseKeywords = filters.keywords.toLowerCase();
 
-    return properties.filter(p => {
+    return properties.filter((p: Property) => {
       if (p.category !== filters.category) return false;
       if (filters.minPrice && p.price < Number(filters.minPrice)) return false;
       if (filters.maxPrice && p.price > Number(filters.maxPrice)) return false;
@@ -152,10 +152,10 @@ const App: React.FC = () => {
         if (filters.heating !== 'Любой' && p.heating !== filters.heating) return false;
         if (filters.isEOselya !== null && p.isEOselya !== filters.isEOselya) return false;
 
-        if (filters.tech.length > 0 && !filters.tech.every(f => p.tech.includes(f))) return false;
-        if (filters.comfort.length > 0 && !filters.comfort.every(f => p.comfort.includes(f))) return false;
-        if (filters.comm.length > 0 && !filters.comm.every(f => p.comm.includes(f))) return false;
-        if (filters.infra.length > 0 && !filters.infra.every(f => p.infra.includes(f))) return false;
+        if (filters.tech.length > 0 && !filters.tech.every((f: string) => p.tech.includes(f))) return false;
+        if (filters.comfort.length > 0 && !filters.comfort.every((f: string) => p.comfort.includes(f))) return false;
+        if (filters.comm.length > 0 && !filters.comm.every((f: string) => p.comm.includes(f))) return false;
+        if (filters.infra.length > 0 && !filters.infra.every((f: string) => p.infra.includes(f))) return false;
       }
 
       return true;
@@ -235,7 +235,7 @@ const App: React.FC = () => {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-4"> {/* Обертка для кнопок */}
+        <div className="flex items-center gap-4">
           {!isClientMode && !isDetailPage && isAuthenticated && (
             <button 
               onClick={() => { setEditingProperty(null); setIsModalOpen(true); }}
@@ -279,13 +279,13 @@ const App: React.FC = () => {
                         type="text" 
                         placeholder="Поиск по адресу, описанию, телефону..." 
                         value={filters.keywords} 
-                        onChange={(e) => setFilters({...filters, keywords: e.target.value})} 
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, keywords: e.target.value})} 
                         className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 text-sm font-bold outline-none transition" 
                       />
                     </div>
                     
                     <div className="flex flex-wrap gap-3 p-1.5 bg-slate-50 rounded-[2rem] w-fit">
-                      {CATEGORIES.map(cat => (
+                      {CATEGORIES.map((cat: { id: PropertyCategory; label: string }) => (
                         <button
                           key={cat.id}
                           onClick={() => setFilters(prev => ({ ...prev, category: cat.id as PropertyCategory }))}
@@ -303,19 +303,19 @@ const App: React.FC = () => {
                         <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Район</label>
                         <select 
                           value={filters.district}
-                          onChange={(e) => setFilters({...filters, district: e.target.value})}
+                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, district: e.target.value})}
                           className="w-full bg-slate-50 border-transparent focus:border-blue-500 border-2 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
                         >
                           <option value="Любой">Любой район</option>
-                          {availableDistricts.map(d => <option key={d} value={d}>{d}</option>)}
+                          {availableDistricts.map((d: string) => <option key={d} value={d}>{d}</option>)}
                         </select>
                       </div>
 
                       <div className="space-y-3">
                         <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Бюджет ($)</label>
                         <div className="flex gap-2">
-                          <input type="number" placeholder="От" value={filters.minPrice} onChange={(e) => setFilters({...filters, minPrice: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                          <input type="number" placeholder="До" value={filters.maxPrice} onChange={(e) => setFilters({...filters, maxPrice: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                          <input type="number" placeholder="От" value={filters.minPrice} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minPrice: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                          <input type="number" placeholder="До" value={filters.maxPrice} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxPrice: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
                         </div>
                       </div>
 
@@ -326,19 +326,19 @@ const App: React.FC = () => {
                           <div className="space-y-3">
                             <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Площадь земли (сот.)</label>
                             <div className="flex gap-2">
-                              <input type="number" placeholder="От" value={filters.minLandArea} onChange={(e) => setFilters({...filters, minLandArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                              <input type="number" placeholder="До" value={filters.maxLandArea} onChange={(e) => setFilters({...filters, maxLandArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              <input type="number" placeholder="От" value={filters.minLandArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minLandArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              <input type="number" placeholder="До" value={filters.maxLandArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxLandArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
                             </div>
                           </div>
                           <div className="space-y-3">
                             <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Тип земли</label>
                             <select 
                               value={filters.landType}
-                              onChange={(e) => setFilters({...filters, landType: e.target.value})}
+                              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, landType: e.target.value})}
                               className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
                             >
                               <option value="Любой">Любой тип</option>
-                              {LAND_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                              {LAND_TYPES.map((t: string) => <option key={t} value={t}>{t}</option>)}
                             </select>
                           </div>
                         </>
@@ -348,57 +348,57 @@ const App: React.FC = () => {
                             <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Комнат</label>
                             <select 
                               value={filters.rooms}
-                              onChange={(e) => setFilters({...filters, rooms: e.target.value})}
+                              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, rooms: e.target.value})}
                               className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
                             >
                               <option value="Любое">Любое</option>
-                              {ROOMS_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+                              {ROOMS_OPTIONS.map((o: string) => <option key={o} value={o}>{o}</option>)}
                             </select>
                           </div>
                           <div className="space-y-3">
                             <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Этаж (от/до)</label>
                             <div className="flex gap-2">
-                              <input type="number" placeholder="Мин" value={filters.minFloor} onChange={(e) => setFilters({...filters, minFloor: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                              <input type="number" placeholder="Макс" value={filters.maxFloor} onChange={(e) => setFilters({...filters, maxFloor: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              <input type="number" placeholder="Мин" value={filters.minFloor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minFloor: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              <input type="number" placeholder="Макс" value={filters.maxFloor} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxFloor: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
                             </div>
                           </div>
                           <div className="space-y-3">
                             <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Общая пл. (м²)</label>
                             <div className="flex gap-2">
-                              <input type="number" placeholder="От" value={filters.minArea} onChange={(e) => setFilters({...filters, minArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                              <input type="number" placeholder="До" value={filters.maxArea} onChange={(e) => setFilters({...filters, maxArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              <input type="number" placeholder="От" value={filters.minArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              <input type="number" placeholder="До" value={filters.maxArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
                             </div>
                           </div>
                           <div className="space-y-3">
                             <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Пл. кухни (м²)</label>
                             <div className="flex gap-2">
-                              <input type="number" placeholder="От" value={filters.minKitchenArea} onChange={(e) => setFilters({...filters, minKitchenArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
-                              <input type="number" placeholder="До" value={filters.maxKitchenArea} onChange={(e) => setFilters({...filters, maxKitchenArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              <input type="number" placeholder="От" value={filters.minKitchenArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, minKitchenArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
+                              <input type="number" placeholder="До" value={filters.maxKitchenArea} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, maxKitchenArea: e.target.value})} className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" />
                             </div>
                           </div>
                           <div className="space-y-3">
                             <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Тип дома</label>
-                            <select value={filters.houseType} onChange={(e) => setFilters({...filters, houseType: e.target.value})} className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition">
+                            <select value={filters.houseType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, houseType: e.target.value})} className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition">
                               <option value="Любой">Любой тип</option>
-                              {HOUSE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                              {HOUSE_TYPES.map((t: string) => <option key={t} value={t}>{t}</option>)}
                             </select>
                           </div>
                           <div className="space-y-3">
                             <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Класс жилья</label>
-                            <select value={filters.housingClass} onChange={(e) => setFilters({...filters, housingClass: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
-                              {HOUSING_CLASSES.map(c => <option key={c} value={c}>{c}</option>)}
+                            <select value={filters.housingClass} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, housingClass: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
+                              {HOUSING_CLASSES.map((c: string) => <option key={c} value={c}>{c}</option>)}
                             </select>
                           </div>
                           <div className="space-y-3">
                             <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Вид ремонта</label>
-                            <select value={filters.repairType} onChange={(e) => setFilters({...filters, repairType: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
-                              {REPAIR_TYPES.map(r => <option key={r} value={r}>{r}</option>)}
+                            <select value={filters.repairType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, repairType: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
+                              {REPAIR_TYPES.map((r: string) => <option key={r} value={r}>{r}</option>)}
                             </select>
                           </div>
                           <div className="space-y-3">
                             <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Отопление</label>
-                            <select value={filters.heating} onChange={(e) => setFilters({...filters, heating: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
-                              {HEATING_OPTIONS.map(h => <option key={h} value={h}>{h}</option>)}
+                            <select value={filters.heating} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, heating: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
+                              {HEATING_OPTIONS.map((h: string) => <option key={h} value={h}>{h}</option>)}
                             </select>
                           </div>
                         </>
@@ -407,10 +407,10 @@ const App: React.FC = () => {
 
                     {!isLand && (
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-8 border-y border-slate-50">
-                        <MultiSelect label="Техника" prefix="Т" options={TECH_OPTIONS} selected={filters.tech} onChange={(s) => setFilters({...filters, tech: s})} />
-                        <MultiSelect label="Комфорт" prefix="К" options={COMFORT_OPTIONS} selected={filters.comfort} onChange={(s) => setFilters(p => ({...p, comfort: s}))} />
-                        <MultiSelect label="Коммуникации" prefix="К" options={COMM_OPTIONS} selected={filters.comm} onChange={(s) => setFilters(p => ({...p, comm: s}))} />
-                        <MultiSelect label="Инфраструктура" prefix="И" options={INFRA_OPTIONS} selected={filters.infra} onChange={(s) => setFilters(p => ({...p, infra: s}))} />
+                        <MultiSelect label="Техника" prefix="Т" options={TECH_OPTIONS} selected={filters.tech} onChange={(s: string[]) => setFilters({...filters, tech: s})} />
+                        <MultiSelect label="Комфорт" prefix="К" options={COMFORT_OPTIONS} selected={filters.comfort} onChange={(s: string[]) => setFilters(p => ({...p, comfort: s}))} />
+                        <MultiSelect label="Коммуникации" prefix="К" options={COMM_OPTIONS} selected={filters.comm} onChange={(s: string[]) => setFilters(p => ({...p, comm: s}))} />
+                        <MultiSelect label="Инфраструктура" prefix="И" options={INFRA_OPTIONS} selected={filters.infra} onChange={(s: string[]) => setFilters(p => ({...p, infra: s}))} />
                       </div>
                     )}
 
@@ -464,12 +464,12 @@ const App: React.FC = () => {
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                {filteredProperties.map(property => (
+                {filteredProperties.map((property: Property) => (
                   <PropertyCard 
                     key={property.id} 
                     property={property} 
                     isClientView={isClientMode}
-                    onEdit={isClientMode || !isAuthenticated ? undefined : (p) => { setEditingProperty(p); setIsModalOpen(true); }}
+                    onEdit={isClientMode || !isAuthenticated ? undefined : (p: Property) => { setEditingProperty(p); setIsModalOpen(true); }}
                     onDelete={isClientMode || !isAuthenticated ? undefined : handleDeleteProperty}
                   />
                 ))}

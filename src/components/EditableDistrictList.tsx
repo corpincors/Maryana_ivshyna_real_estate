@@ -1,5 +1,5 @@
 import React from 'react';
-import { X } from '../../components/Icons'; // Исправленный путь импорта
+import { X } from '../../components/Icons';
 
 interface EditableDistrictListProps {
   districts: string[];
@@ -9,7 +9,7 @@ interface EditableDistrictListProps {
 const EditableDistrictList: React.FC<EditableDistrictListProps> = ({ districts, onRemove }) => {
   return (
     <div className="space-y-2">
-      {districts.map((district) => (
+      {districts.map((district: string) => (
         <div key={district} className="flex items-center justify-between bg-slate-100 p-3 rounded-xl text-sm font-semibold text-slate-700">
           <span>{district}</span>
           <button

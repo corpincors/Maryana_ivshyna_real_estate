@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/src/context/AuthContext'; // Исправленный путь
-import { Home } from '@/components/Icons'; // Исправленный путь
+import { useAuth } from '@/src/context/AuthContext';
+import { Home } from '@/components/Icons';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -45,7 +45,7 @@ const LoginPage: React.FC = () => {
             <input
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
               className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
               placeholder="Maryana"
               required
@@ -56,7 +56,7 @@ const LoginPage: React.FC = () => {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
               placeholder="Colar90estate"
               required

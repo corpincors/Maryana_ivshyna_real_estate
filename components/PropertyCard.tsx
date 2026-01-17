@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Импортируем Link
+import { Link } from 'react-router-dom';
 import { Property } from '../types';
-import { MapPin, Heart, Share2, Eye, Phone, Link as LinkIcon, ChevronLeft, ChevronRight, Trash2 } from './Icons'; // Переименовали Link в LinkIcon
+import { MapPin, Heart, Share2, Eye, Phone, Link as LinkIcon, ChevronLeft, ChevronRight, Trash2 } from './Icons';
 
 interface PropertyCardProps {
   property: Property;
@@ -16,12 +16,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onEdit, onDelete,
 
   const nextImg = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setCurrentImg((prev) => (prev + 1) % property.imageUrls.length);
+    setCurrentImg((prev: number) => (prev + 1) % property.imageUrls.length);
   };
 
   const prevImg = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setCurrentImg((prev) => (prev - 1 + property.imageUrls.length) % property.imageUrls.length);
+    setCurrentImg((prev: number) => (prev - 1 + property.imageUrls.length) % property.imageUrls.length);
   };
 
   const generateClientLink = (e: React.MouseEvent) => {
@@ -49,7 +49,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onEdit, onDelete,
               <ChevronRight className="w-5 h-5" />
             </button>
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-              {property.imageUrls.map((_, i) => (
+              {property.imageUrls.map((_: string, i: number) => (
                 <div key={i} className={`h-1 rounded-full transition-all ${i === currentImg ? 'w-4 bg-white' : 'w-1 bg-white/50'}`}></div>
               ))}
             </div>
@@ -138,7 +138,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onEdit, onDelete,
               </button>
             )}
             <Link 
-              to={`/property/${property.id}${isClientView ? '?clientMode=true' : ''}`} // Ссылка на страницу деталей
+              to={`/property/${property.id}${isClientView ? '?clientMode=true' : ''}`}
               className="w-12 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-xl transition-all flex items-center justify-center"
             >
               <Eye className="w-5 h-5" />
