@@ -31,12 +31,7 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({ properties }) =
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center text-slate-500">
         Объект не найден.
-        <button 
-          onClick={() => navigate('/')} 
-          className="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all active:scale-95"
-        >
-          Вернуться к списку
-        </button>
+        {/* Кнопка 'Вернуться к списку' удалена */}
       </div>
     );
   }

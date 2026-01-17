@@ -47,7 +47,7 @@ const LoginPage: React.FC = () => {
               value={username}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
               className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
-              placeholder="Maryana"
+              placeholder="Введите логин"
               required
             />
           </div>
@@ -58,7 +58,7 @@ const LoginPage: React.FC = () => {
               value={password}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
-              placeholder="Colar90estate"
+              placeholder="Введите пароль"
               required
             />
           </div>
