@@ -196,7 +196,7 @@ const App: React.FC = () => {
                       placeholder="Поиск по адресу, описанию..." 
                       value={filters.keywords} 
                       onChange={(e) => setFilters({...filters, keywords: e.target.value})} 
-                      className="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" 
+                      className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 text-sm font-bold outline-none transition" 
                     />
                   </div>
                   
