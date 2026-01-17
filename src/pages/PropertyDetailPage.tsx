@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Property } from '../../types'; // Исправленный путь импорта
+import { Property } from '../../types';
 import { 
-  MapPin, Phone, Home, Maximize2, Layers, X, ChevronLeft, Heart, Share2, ChevronRight // Добавлена ChevronRight
-} from '../../components/Icons'; // Исправленный путь импорта
+  MapPin, Phone, Home, Maximize2, Layers, X, ChevronLeft, Heart, Share2, ChevronRight 
+} from '../../components/Icons';
 import { 
   CATEGORIES, ROOMS_OPTIONS, LAND_TYPES, HOUSE_TYPES, REPAIR_TYPES, 
   HOUSING_CLASSES, HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, 
   COMM_OPTIONS, INFRA_OPTIONS 
-} from '../../constants'; // Исправленный путь импорта
+} from '../../constants';
 
 interface PropertyDetailPageProps {
   properties: Property[];
@@ -130,7 +130,7 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({ properties }) =
                 <span className="font-black text-sm tracking-wider">{property.ownerPhone}</span>
               </div>
             )}
-            <p className="text-slate-700 leading-relaxed">{property.description}</p>
+            <p className="text-slate-700 leading-relaxed break-words">{property.description}</p> {/* Добавлен break-words */}
           </div>
           <div className="lg:col-span-1 bg-slate-50 rounded-3xl p-6 space-y-6">
             <h3 className="text-lg font-black text-slate-900 uppercase tracking-widest">Основные характеристики</h3>
