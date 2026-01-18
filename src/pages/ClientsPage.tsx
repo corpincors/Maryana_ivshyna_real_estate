@@ -115,12 +115,7 @@ const ClientsPage: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <Link
-            to="/"
-            className="px-6 py-3 rounded-xl font-bold flex items-center gap-3 text-xs transition-all active:scale-95 bg-slate-100 hover:bg-slate-200 text-slate-600"
-          >
-            Объекты
-          </Link>
+          {/* Кнопка "Объекты" была удалена, так как она теперь находится в глобальной шапке App.tsx */}
           <button
             onClick={openAddModal}
             className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-xl shadow-blue-100 transition-all active:scale-95"
@@ -169,7 +164,7 @@ const ClientsPage: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                       {formatDateTime(client.lastCalled)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600 max-w-xs break-words"> {/* Removed whitespace-nowrap and truncate, added break-words */}
+                    <td className="px-6 py-4 text-sm text-slate-600 max-w-xs break-words">
                       {client.request}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
