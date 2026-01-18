@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Client } from '../../types';
-import { PlusCircle, Users, Edit, Trash2, ChevronLeft } from '../../components/Icons'; // Import ChevronLeft
+import { PlusCircle, Users, Edit, Trash2 } from '../../components/Icons'; // Removed ChevronLeft as it's no longer needed for this button
 import ClientFormModal from '../components/ClientFormModal';
 import { showSuccess, showError } from '../utils/toast';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate, Link } from 'react-router-dom'; // Import Link
 
 const API_URL = '/api/clients';
 
@@ -114,13 +114,13 @@ const ClientsPage: React.FC = () => {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-4"> {/* Added a div to group buttons */}
-          <button 
-            onClick={() => navigate('/')} // Navigate back to the main properties page
-            className="bg-slate-100 hover:bg-slate-200 text-slate-600 px-6 py-3 rounded-2xl font-bold flex items-center gap-3 text-xs transition-all active:scale-95"
+        <div className="flex items-center gap-4">
+          <Link
+            to="/"
+            className="px-6 py-3 rounded-xl font-bold flex items-center gap-3 text-xs transition-all active:scale-95 bg-slate-100 hover:bg-slate-200 text-slate-600"
           >
-            <ChevronLeft className="w-4 h-4" /> Назад к объектам
-          </button>
+            Объекты
+          </Link>
           <button
             onClick={openAddModal}
             className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-xl shadow-blue-100 transition-all active:scale-95"
