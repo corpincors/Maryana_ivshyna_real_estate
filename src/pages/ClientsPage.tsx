@@ -169,7 +169,7 @@ const ClientsPage: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
                       {formatDateTime(client.lastCalled)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600 max-w-xs"> {/* Removed whitespace-nowrap and truncate */}
+                    <td className="px-6 py-4 text-sm text-slate-600 max-w-xs break-words"> {/* Removed whitespace-nowrap and truncate, added break-words */}
                       {client.request}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
