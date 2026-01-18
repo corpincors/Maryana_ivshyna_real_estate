@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Client } from '../../types';
-import { PlusCircle, Users, Edit, Trash2 } from '../../components/Icons'; // Removed ChevronLeft as it's no longer needed for this button
+import { PlusCircle, Users, Edit, Trash2 } from '../../components/Icons';
 import ClientFormModal from '../components/ClientFormModal';
 import { showSuccess, showError } from '../utils/toast';
 import { useNavigate, Link } from 'react-router-dom'; // Import Link
@@ -115,12 +115,7 @@ const ClientsPage: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <Link
-            to="/"
-            className="px-6 py-3 rounded-xl font-bold flex items-center gap-3 text-xs transition-all active:scale-95 bg-slate-100 hover:bg-slate-200 text-slate-600"
-          >
-            Объекты
-          </Link>
+          {/* The 'Объекты' link is now in App.tsx header */}
           <button
             onClick={openAddModal}
             className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-xl shadow-blue-100 transition-all active:scale-95"

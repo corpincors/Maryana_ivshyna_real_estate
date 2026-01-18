@@ -64,6 +64,7 @@ const App: React.FC = () => {
 
   const isDetailPage = useMemo(() => location.pathname.startsWith('/property/'), [location.pathname]);
   const isClientsPage = useMemo(() => location.pathname === '/clients', [location.pathname]);
+  const isPropertiesPage = useMemo(() => location.pathname === '/', [location.pathname]);
 
 
   const availableDistricts = useMemo(() => {
@@ -256,14 +257,14 @@ const App: React.FC = () => {
         <div className="flex items-center gap-4">
           {!isClientMode && isAuthenticated && (
             <>
-              {!isDetailPage && !isClientsPage && ( // Show "Add Property" only on main page
-                <button 
-                  onClick={() => { setEditingProperty(null); setIsModalOpen(true); }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-xl shadow-blue-100 transition-all active:scale-95"
-                >
-                  <PlusCircle className="w-5 h-5" /> Добавить объект
-                </button>
-              )}
+              <Link 
+                to="/" 
+                className={`px-6 py-3 rounded-xl font-bold flex items-center gap-3 text-xs transition-all active:scale-95 ${
+                  isPropertiesPage && !isDetailPage ? 'bg-blue-500 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                }`}
+              >
+                Объекты
+              </Link>
               <Link 
                 to="/clients" 
                 className={`px-6 py-3 rounded-xl font-bold flex items-center gap-3 text-xs transition-all active:scale-95 ${
@@ -272,6 +273,14 @@ const App: React.FC = () => {
               >
                 <Users className="w-4 h-4" /> Клиенты
               </Link>
+              {!isDetailPage && !isClientsPage && ( // Show "Add Property" only on main page
+                <button 
+                  onClick={() => { setEditingProperty(null); setIsModalOpen(true); }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-xl shadow-blue-100 transition-all active:scale-95"
+                >
+                  <PlusCircle className="w-5 h-5" /> Добавить объект
+                </button>
+              )}
               <button 
                 onClick={logout}
                 className="bg-red-50 hover:bg-red-100 text-red-600 px-6 py-3 rounded-xl font-bold flex items-center gap-3 text-xs transition-all active:scale-95"
