@@ -1,17 +1,18 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, Navigate, Link } from 'react-router-dom';
 import { Property, FilterState, PropertyCategory } from './types';
 import { 
   ROOMS_OPTIONS, LAND_TYPES, HOUSE_TYPES, 
   REPAIR_TYPES, HOUSING_CLASSES, HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, 
   COMM_OPTIONS, INFRA_OPTIONS, CATEGORIES, INITIAL_DISTRICTS
 } from './constants.tsx';
-import { PlusCircle, Search, Plus, Home, LogOut, ChevronDown } from './components/Icons';
+import { PlusCircle, Search, Plus, Home, LogOut, ChevronDown, Users } from './components/Icons';
 import PropertyCard from './components/PropertyCard';
 import PropertyFormModal from './components/PropertyFormModal';
 import MultiSelect from './components/MultiSelect';
 import PropertyDetailPage from './src/pages/PropertyDetailPage';
 import LoginPage from '@/src/pages/LoginPage';
+import ClientsPage from '@/src/pages/ClientsPage'; // Import ClientsPage
 import { useAuth } from '@/src/context/AuthContext';
 
 const API_URL = '/api/properties';
@@ -62,6 +63,8 @@ const App: React.FC = () => {
   }, [location.search]);
 
   const isDetailPage = useMemo(() => location.pathname.startsWith('/property/'), [location.pathname]);
+  const isClientsPage = useMemo(() => location.pathname === '/clients', [location.pathname]);
+
 
   const availableDistricts = useMemo(() => {
     const propertyDistricts = properties.map((p: Property) => p.district);
@@ -251,13 +254,31 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          {!isClientMode && !isDetailPage && isAuthenticated && (
-            <button 
-              onClick={() => { setEditingProperty(null); setIsModalOpen(true); }}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-xl shadow-blue-100 transition-all active:scale-95"
-            >
-              <PlusCircle className="w-5 h-5" /> Добавить объект
-            </button>
+          {!isClientMode && isAuthenticated && (
+            <>
+              {!isDetailPage && !isClientsPage && ( // Show "Add Property" only on main page
+                <button 
+                  onClick={() => { setEditingProperty(null); setIsModalOpen(true); }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-xl shadow-blue-100 transition-all active:scale-95"
+                >
+                  <PlusCircle className="w-5 h-5" /> Добавить объект
+                </button>
+              )}
+              <Link 
+                to="/clients" 
+                className={`px-6 py-3 rounded-xl font-bold flex items-center gap-3 text-xs transition-all active:scale-95 ${
+                  isClientsPage ? 'bg-blue-500 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                }`}
+              >
+                <Users className="w-4 h-4" /> Клиенты
+              </Link>
+              <button 
+                onClick={logout}
+                className="bg-red-50 hover:bg-red-100 text-red-600 px-6 py-3 rounded-xl font-bold flex items-center gap-3 text-xs transition-all active:scale-95"
+              >
+                <LogOut className="w-4 h-4" /> Выйти
+              </button>
+            </>
           )}
           {isClientMode && !isDetailPage && ( 
             <button 
@@ -269,23 +290,16 @@ const App: React.FC = () => {
               Вернуться в CRM
             </button>
           )}
-          {!isClientMode && isAuthenticated && (
-            <button 
-              onClick={logout}
-              className="bg-red-50 hover:bg-red-100 text-red-600 px-6 py-3 rounded-xl font-bold flex items-center gap-3 text-xs transition-all active:scale-95"
-            >
-              <LogOut className="w-4 h-4" /> Выйти
-            </button>
-          )}
         </div>
       </header>
 
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/clients" element={isAuthenticated ? <ClientsPage /> : <Navigate to="/login" replace />} />
         <Route path="/" element={
           isAuthenticated || isClientMode ? (
             <>
-              {!isDetailPage && (
+              {!isDetailPage && !isClientsPage && ( // Hide filters on detail and clients page
                 <section className="bg-white p-8 lg:p-12 rounded-[3.5rem] shadow-sm border border-slate-50 mb-12">
                   <div className="grid grid-cols-1 gap-12">
                     <div className="space-y-3">
@@ -493,29 +507,31 @@ const App: React.FC = () => {
                 </section>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                {filteredProperties.map((property: Property) => (
-                  <PropertyCard 
-                    key={property.id} 
-                    property={property} 
-                    isClientView={isClientMode}
-                    onEdit={isClientMode || !isAuthenticated ? undefined : (p: Property) => { setEditingProperty(p); setIsModalOpen(true); }}
-                    onDelete={isClientMode || !isAuthenticated ? undefined : handleDeleteProperty}
-                  />
-                ))}
+              {!isClientsPage && ( // Hide property cards on clients page
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                  {filteredProperties.map((property: Property) => (
+                    <PropertyCard 
+                      key={property.id} 
+                      property={property} 
+                      isClientView={isClientMode}
+                      onEdit={isClientMode || !isAuthenticated ? undefined : (p: Property) => { setEditingProperty(p); setIsModalOpen(true); }}
+                      onDelete={isClientMode || !isAuthenticated ? undefined : handleDeleteProperty}
+                    />
+                  ))}
 
-                {!isClientMode && isAuthenticated && (
-                  <div 
-                    onClick={() => { setEditingProperty(null); setIsModalOpen(true); }}
-                    className="bg-white rounded-[2.5rem] border-4 border-dashed border-slate-100 flex flex-col items-center justify-center p-12 text-center group cursor-pointer hover:border-blue-100 hover:bg-blue-50/10 transition-all min-h-[400px]"
-                  >
-                    <div className="bg-slate-50 group-hover:bg-blue-600 p-8 rounded-full transition-all duration-500 mb-6 group-hover:rotate-90">
-                      <Plus className="w-10 h-10 text-slate-300 group-hover:text-white" />
+                  {!isClientMode && isAuthenticated && (
+                    <div 
+                      onClick={() => { setEditingProperty(null); setIsModalOpen(true); }}
+                      className="bg-white rounded-[2.5rem] border-4 border-dashed border-slate-100 flex flex-col items-center justify-center p-12 text-center group cursor-pointer hover:border-blue-100 hover:bg-blue-50/10 transition-all min-h-[400px]"
+                    >
+                      <div className="bg-slate-50 group-hover:bg-blue-600 p-8 rounded-full transition-all duration-500 mb-6 group-hover:rotate-90">
+                        <Plus className="w-10 h-10 text-slate-300 group-hover:text-white" />
+                      </div>
+                      <p className="font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600">Новый объект</p>
                     </div>
-                    <p className="font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600">Новый объект</p>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
             </>
           ) : (
             <Navigate to="/login" replace />

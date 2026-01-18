@@ -17,7 +17,11 @@ import {
   ChevronRight,
   Camera,
   Trash2,
-  LogOut // Добавлена иконка LogOut
+  LogOut,
+  Users, // Добавлена иконка Users
+  MessageSquare, // Добавлена иконка MessageSquare
+  Calendar, // Добавлена иконка Calendar
+  Edit // Добавлена иконка Edit
 } from 'lucide-react';
 
 export {
@@ -39,5 +43,9 @@ export {
   ChevronRight,
   Camera,
   Trash2,
-  LogOut // Экспортирована иконка LogOut
+  LogOut,
+  Users, // Экспортирована иконка Users
+  MessageSquare, // Экспортирована иконка MessageSquare
+  Calendar, // Экспортирована иконка Calendar
+  Edit // Экспортирована иконка Edit
 };

@@ -62,3 +62,10 @@ export interface FilterState {
   infra: string[];
   keywords: string; // Добавлено поле для поиска по ключевым словам
 }
+
+export interface Client {
+  id: string;
+  phoneNumber: string;
+  lastCalled: string; // ISO date string
+  request: string;
+}
