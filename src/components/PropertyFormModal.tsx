@@ -4,9 +4,9 @@ import { X, Home, Layers, Camera, Plus, Phone } from '../../components/Icons';
 import EditableMultiSelect from '../../components/EditableMultiSelect';
 import EditableSingleSelect from '../../components/EditableSingleSelect';
 import { 
-  LAND_TYPES, // LAND_TYPES remains, as it is used directly
-  HOUSE_TYPES_EXTENDED, // HOUSE_TYPES_EXTENDED remains, as it is used directly
-  TECH_OPTIONS, COMFORT_OPTIONS, COMM_OPTIONS, INFRA_OPTIONS, // These are needed for constantOptions
+  LAND_TYPES, 
+  HOUSE_TYPES_EXTENDED, 
+  REPAIR_TYPES, HOUSING_CLASSES, HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, COMM_OPTIONS, INFRA_OPTIONS, YEAR_BUILT_OPTIONS, WALL_TYPE_OPTIONS, BATHROOM_OPTIONS
 } from '../../constants.tsx';
 
 interface PropertyFormModalProps {
@@ -129,7 +129,6 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
   });
 
   useEffect(() => {
-    // console.log("PropertyFormModal.tsx - availableComfortOptions prop received:", availableComfortOptions); // Removed log
     if (editingProperty) {
       setFormData(editingProperty);
     } else if (isOpen) {
