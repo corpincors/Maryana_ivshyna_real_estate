@@ -49,9 +49,11 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     isEOselya: false,
     description: '',
     imageUrls: [],
-    houseSubtype: HOUSE_TYPES_EXTENDED[0], // Инициализация нового поля
-    locationType: 'inCity', // Инициализация нового поля
-    distanceFromCityKm: undefined // Инициализация нового поля
+    houseSubtype: HOUSE_TYPES_EXTENDED[0],
+    locationType: 'inCity',
+    distanceFromCityKm: undefined,
+    plotArea: undefined, // Инициализация нового поля
+    cadastralNumber: '', // Инициализация нового поля
   });
 
   useEffect(() => {
@@ -80,9 +82,11 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
         isEOselya: false,
         description: '',
         imageUrls: [],
-        houseSubtype: HOUSE_TYPES_EXTENDED[0], // Сброс для нового объекта
-        locationType: 'inCity', // Сброс для нового объекта
-        distanceFromCityKm: undefined // Сброс для нового объекта
+        houseSubtype: HOUSE_TYPES_EXTENDED[0],
+        locationType: 'inCity',
+        distanceFromCityKm: undefined,
+        plotArea: undefined, // Сброс для нового объекта
+        cadastralNumber: '', // Сброс для нового объекта
       });
     }
   }, [editingProperty, isOpen]);
@@ -109,10 +113,12 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     const newCategory = e.target.value;
     setFormData(prev => ({ 
       ...prev, 
-      category: newCategory as Property['category'], // Убедимся, что тип корректен
-      houseSubtype: newCategory === 'houses' ? HOUSE_TYPES_EXTENDED[0] : undefined, // Сброс или установка подкатегории
-      locationType: newCategory === 'houses' ? 'inCity' : undefined, // Сброс или установка типа местоположения
-      distanceFromCityKm: newCategory === 'houses' ? undefined : undefined // Сброс расстояния
+      category: newCategory as Property['category'],
+      houseSubtype: newCategory === 'houses' ? HOUSE_TYPES_EXTENDED[0] : undefined,
+      locationType: newCategory === 'houses' ? 'inCity' : undefined,
+      distanceFromCityKm: newCategory === 'houses' ? undefined : undefined,
+      plotArea: newCategory === 'houses' ? undefined : undefined, // Сброс при смене категории
+      cadastralNumber: newCategory === 'houses' ? '' : undefined, // Сброс при смене категории
     }));
   };
 
@@ -121,7 +127,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     setFormData(prev => ({ 
       ...prev, 
       locationType: newLocationType,
-      distanceFromCityKm: newLocationType === 'inCity' ? undefined : prev.distanceFromCityKm // Сброс расстояния, если "В городе"
+      distanceFromCityKm: newLocationType === 'inCity' ? undefined : prev.distanceFromCityKm
     }));
   };
 
@@ -277,7 +283,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                 </div>
                 {formData.locationType === 'outsideCity' && (
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Расстояние от города (км)</label>
+                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">От города (км)</label> {/* Изменено здесь */}
                     <input 
                       type="number"
                       name="distanceFromCityKm"
@@ -375,18 +381,42 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                     <option value="Construction">Строящийся</option>
                   </select>
                 </div>
-                {isHouses && ( // Поле для типа дома
-                  <div className="space-y-2">
-                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Тип дома</label>
-                    <select 
-                      name="houseSubtype" 
-                      value={formData.houseSubtype || ''} 
-                      onChange={handleChange} 
-                      className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold"
-                    >
-                      {HOUSE_TYPES_EXTENDED.map((t: string) => <option key={t} value={t}>{t}</option>)}
-                    </select>
-                  </div>
+                {isHouses && (
+                  <>
+                    <div className="space-y-2">
+                      <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Тип дома</label>
+                      <select 
+                        name="houseSubtype" 
+                        value={formData.houseSubtype || ''} 
+                        onChange={handleChange} 
+                        className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold"
+                      >
+                        {HOUSE_TYPES_EXTENDED.map((t: string) => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                    <div className="space-y-2"> {/* Новое поле: Площадь участка */}
+                      <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Площадь участка (сот.)</label>
+                      <input 
+                        type="number"
+                        name="plotArea"
+                        value={formData.plotArea || ''}
+                        onChange={handleChange}
+                        placeholder="Например, 6"
+                        className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
+                      />
+                    </div>
+                    <div className="space-y-2"> {/* Новое поле: Кадастровый номер */}
+                      <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Кадастровый номер</label>
+                      <input 
+                        type="text"
+                        name="cadastralNumber"
+                        value={formData.cadastralNumber || ''}
+                        onChange={handleChange}
+                        placeholder="Например, 1234567890"
+                        className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
+                      />
+                    </div>
+                  </>
                 )}
                 <div className="space-y-2">
                   <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Комнат</label>
@@ -452,7 +482,6 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                 </label>
                 <label className="flex items-center gap-4 cursor-pointer group">
                   <div className={`w-12 h-6 rounded-full relative transition-colors ${formData.hasRepair ? 'bg-indigo-600' : 'bg-slate-200'}`} onClick={() => handleToggle('hasRepair')}>
-                    {/* FIX: Corrected malformed div element */}
                     <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${formData.hasRepair ? 'left-7' : 'left-1'}`}></div>
                   </div>
                   <span className="text-xs font-black text-slate-500 uppercase tracking-widest group-hover:text-indigo-600">Ремонт</span>

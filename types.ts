@@ -29,6 +29,8 @@ export interface Property {
   houseSubtype?: 'Клубный дом' | 'Коттедж' | 'Дача' | 'Дуплекс' | 'Дом' | 'Часть дома' | 'Модульные дома' | 'Таунхаус'; // Обновленный тип
   locationType?: 'inCity' | 'outsideCity'; // Новое поле для типа местоположения
   distanceFromCityKm?: number; // Новое поле для расстояния от города
+  plotArea?: number; // Новое поле: Площадь участка
+  cadastralNumber?: string; // Новое поле: Кадастровый номер
   description: string;
   imageUrls: string[];
   publicLink?: string; // Added field for the public client link
