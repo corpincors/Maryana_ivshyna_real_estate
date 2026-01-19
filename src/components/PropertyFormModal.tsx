@@ -43,6 +43,7 @@ interface PropertyFormModalProps {
   onAddCustomBathroomOption: (option: string) => void;
   onRemoveCustomBathroomOption: (option: string) => void;
 
+  // Добавлены пропсы для EditableMultiSelect
   availableTechOptions: string[]; 
   onAddCustomTechOption: (option: string) => void;
   onRemoveCustomTechOption: (option: string) => void; 

@@ -17,7 +17,7 @@ const EditableMultiSelect: React.FC<EditableMultiSelectProps> = ({
   label, 
   prefix, 
   initialOptions, // Now includes all options
-  constantOptions, // New prop
+  constantOptions = [], // Добавлено значение по умолчанию
   selected, 
   onChange,
   onAddCustomOption,
