@@ -49,3 +49,21 @@ export const CATEGORIES: Array<{ id: PropertyCategory; label: string }> = [
 export const INITIAL_DISTRICTS = [
   'Приморский', 'Малиновский', 'Суворовский', 'Киевский'
 ];
+
+export const YEAR_BUILT_OPTIONS = [
+  'На этапе строительства',
+  '2000-2010',
+  '2010-2015',
+  '2015-2022',
+  '2023+',
+  'До 2000'
+];
+
+export const WALL_TYPE_OPTIONS = [
+  'Кирпичный',
+  'Панельный',
+  'Монолитный',
+  'Деревянный',
+  'Газоблок',
+  'Сип панель'
+];

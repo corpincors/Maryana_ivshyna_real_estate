@@ -31,6 +31,8 @@ export interface Property {
   distanceFromCityKm?: number; // Новое поле для расстояния от города
   plotArea?: number; // Новое поле: Площадь участка
   cadastralNumber?: string; // Новое поле: Кадастровый номер
+  yearBuilt?: string; // Новое поле: Год постройки/сдачи
+  wallType?: string; // Новое поле: Тип стен
   description: string;
   imageUrls: string[];
   publicLink?: string; // Added field for the public client link
@@ -64,6 +66,8 @@ export interface FilterState {
   houseSubtype: string; // Добавлено поле для фильтрации по типу дома
   locationType: string; // Добавлено поле для фильтрации по типу местоположения
   distanceFromCityKm: string; // Изменено на одно поле для фильтрации по расстоянию от города
+  yearBuilt: string; // Добавлено поле для фильтрации по году постройки
+  wallType: string; // Добавлено поле для фильтрации по типу стен
   tech: string[];
   comfort: string[];
   comm: string[];

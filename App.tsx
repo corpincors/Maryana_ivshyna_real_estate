@@ -4,7 +4,8 @@ import { Property, FilterState, PropertyCategory } from './types';
 import { 
   ROOMS_OPTIONS, LAND_TYPES, HOUSE_TYPES, 
   REPAIR_TYPES, HOUSING_CLASSES, HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, 
-  COMM_OPTIONS, INFRA_OPTIONS, CATEGORIES, INITIAL_DISTRICTS, HOUSE_TYPES_EXTENDED, LOCATION_TYPES
+  COMM_OPTIONS, INFRA_OPTIONS, CATEGORIES, INITIAL_DISTRICTS, HOUSE_TYPES_EXTENDED, LOCATION_TYPES,
+  YEAR_BUILT_OPTIONS, WALL_TYPE_OPTIONS
 } from './constants.tsx';
 import { PlusCircle, Search, Plus, Home, LogOut, ChevronDown, Users } from './components/Icons';
 import PropertyCard from './components/PropertyCard';
@@ -125,9 +126,11 @@ const App: React.FC = () => {
     landType: 'Любой',
     minLandArea: '',
     maxLandArea: '',
-    houseSubtype: 'Любой', // Добавлено новое поле фильтра
-    locationType: 'Любой', // Инициализация нового поля
-    distanceFromCityKm: '', // Инициализация нового поля
+    houseSubtype: 'Любой',
+    locationType: 'Любой',
+    distanceFromCityKm: '',
+    yearBuilt: 'Любой', // Инициализация нового поля фильтра
+    wallType: 'Любой', // Инициализация нового поля фильтра
     tech: [],
     comfort: [],
     comm: [],
@@ -174,6 +177,8 @@ const App: React.FC = () => {
         if (filters.repairType !== 'Любой' && p.repairType !== filters.repairType) return false;
         if (filters.heating !== 'Любой' && p.heating !== filters.heating) return false;
         if (filters.isEOselya !== null && p.isEOselya !== filters.isEOselya) return false;
+        if (filters.yearBuilt !== 'Любой' && p.yearBuilt !== filters.yearBuilt) return false; // Новый фильтр
+        if (filters.wallType !== 'Любой' && p.wallType !== filters.wallType) return false; // Новый фильтр
 
         // New filter for houseSubtype (now "Тип дома")
         if (filters.category === 'houses' && filters.houseSubtype !== 'Любой' && p.houseSubtype !== filters.houseSubtype) return false;
@@ -248,9 +253,11 @@ const App: React.FC = () => {
       rooms: 'Любое', type: 'Любой', houseType: 'Любой', housingClass: 'Любой',
       hasFurniture: null, hasRepair: null, repairType: 'Любой', heating: 'Любой',
       isEOselya: null, landType: 'Любой', minLandArea: '', maxLandArea: '',
-      houseSubtype: 'Любой', // Сброс нового поля
-      locationType: 'Любой', // Сброс нового поля
-      distanceFromCityKm: '', // Сброс нового поля
+      houseSubtype: 'Любой',
+      locationType: 'Любой',
+      distanceFromCityKm: '',
+      yearBuilt: 'Любой', // Сброс нового поля
+      wallType: 'Любой', // Сброс нового поля
       tech: [], comfort: [], comm: [], infra: [],
       keywords: '',
     });
@@ -353,7 +360,9 @@ const App: React.FC = () => {
                             category: cat.id as PropertyCategory, 
                             houseSubtype: 'Любой', // Reset houseSubtype on category change
                             locationType: 'Любой', // Reset locationType on category change
-                            distanceFromCityKm: '' // Reset distance on category change
+                            distanceFromCityKm: '', // Reset distance on category change
+                            yearBuilt: 'Любой', // Сброс года постройки при смене категории
+                            wallType: 'Любой', // Сброс типа стен при смене категории
                           }))} 
                           className={`px-8 py-3.5 rounded-full font-black text-xs uppercase tracking-widest transition-all ${
                             filters.category === cat.id ? 'bg-white text-blue-600 shadow-xl' : 'text-slate-400 hover:text-slate-600'
@@ -378,9 +387,9 @@ const App: React.FC = () => {
                           </select>
                         </div>
                       )}
-                      {isHouses && filters.locationType === 'За городом' && ( // Moved "Расстояние от города (км)" here
+                      {isHouses && filters.locationType === 'За городом' && ( // Moved "От города (км)" here
                         <div className="space-y-3">
-                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Расстояние от города (км)</label>
+                          <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">От города (км)</label>
                           <input 
                             type="number" 
                             placeholder="До" 
@@ -519,6 +528,29 @@ const App: React.FC = () => {
                               <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Отопление</label>
                               <select value={filters.heating} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, heating: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
                                 {HEATING_OPTIONS.map((h: string) => <option key={h} value={h}>{h}</option>)}
+                              </select>
+                            </div>
+                            {/* Новые фильтры: Год постройки/сдачи и Тип стен */}
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Год постройки/сдачи</label>
+                              <select 
+                                value={filters.yearBuilt}
+                                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, yearBuilt: e.target.value})}
+                                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
+                              >
+                                <option value="Любой">Любой</option>
+                                {YEAR_BUILT_OPTIONS.map((y: string) => <option key={y} value={y}>{y}</option>)}
+                              </select>
+                            </div>
+                            <div className="space-y-3">
+                              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Тип стен</label>
+                              <select 
+                                value={filters.wallType}
+                                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilters({...filters, wallType: e.target.value})}
+                                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
+                              >
+                                <option value="Любой">Любой</option>
+                                {WALL_TYPE_OPTIONS.map((w: string) => <option key={w} value={w}>{w}</option>)}
                               </select>
                             </div>
                           </div>

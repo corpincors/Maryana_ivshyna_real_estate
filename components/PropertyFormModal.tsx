@@ -6,7 +6,7 @@ import SingleSelectWithDelete from './SingleSelectWithDelete';
 import { 
   LAND_TYPES, HOUSE_TYPES, REPAIR_TYPES, HOUSING_CLASSES,
   HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, COMM_OPTIONS, INFRA_OPTIONS,
-  INITIAL_DISTRICTS, HOUSE_TYPES_EXTENDED
+  INITIAL_DISTRICTS, HOUSE_TYPES_EXTENDED, YEAR_BUILT_OPTIONS, WALL_TYPE_OPTIONS
 } from '../constants.tsx';
 
 interface PropertyFormModalProps {
@@ -52,8 +52,10 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
     houseSubtype: HOUSE_TYPES_EXTENDED[0],
     locationType: 'inCity',
     distanceFromCityKm: undefined,
-    plotArea: undefined, // Инициализация нового поля
-    cadastralNumber: '', // Инициализация нового поля
+    plotArea: undefined,
+    cadastralNumber: '',
+    yearBuilt: '', // Инициализация нового поля
+    wallType: '', // Инициализация нового поля
   });
 
   useEffect(() => {
@@ -85,8 +87,10 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
         houseSubtype: HOUSE_TYPES_EXTENDED[0],
         locationType: 'inCity',
         distanceFromCityKm: undefined,
-        plotArea: undefined, // Сброс для нового объекта
-        cadastralNumber: '', // Сброс для нового объекта
+        plotArea: undefined,
+        cadastralNumber: '',
+        yearBuilt: '', // Сброс для нового объекта
+        wallType: '', // Сброс для нового объекта
       });
     }
   }, [editingProperty, isOpen]);
@@ -117,8 +121,10 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
       houseSubtype: newCategory === 'houses' ? HOUSE_TYPES_EXTENDED[0] : undefined,
       locationType: newCategory === 'houses' ? 'inCity' : undefined,
       distanceFromCityKm: newCategory === 'houses' ? undefined : undefined,
-      plotArea: newCategory === 'houses' ? undefined : undefined, // Сброс при смене категории
-      cadastralNumber: newCategory === 'houses' ? '' : undefined, // Сброс при смене категории
+      plotArea: newCategory === 'houses' ? undefined : undefined,
+      cadastralNumber: newCategory === 'houses' ? '' : undefined,
+      yearBuilt: newCategory === 'land' ? undefined : '', // Сброс для земли
+      wallType: newCategory === 'land' ? undefined : '', // Сброс для земли
     }));
   };
 
@@ -133,6 +139,14 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
 
   const handleDistrictChange = (value: string) => {
     setFormData(prev => ({ ...prev, district: value }));
+  };
+
+  const handleYearBuiltChange = (value: string) => {
+    setFormData(prev => ({ ...prev, yearBuilt: value }));
+  };
+
+  const handleWallTypeChange = (value: string) => {
+    setFormData(prev => ({ ...prev, wallType: value }));
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -283,7 +297,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                 </div>
                 {formData.locationType === 'outsideCity' && (
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">От города (км)</label> {/* Изменено здесь */}
+                    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">От города (км)</label>
                     <input 
                       type="number"
                       name="distanceFromCityKm"
@@ -394,7 +408,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                         {HOUSE_TYPES_EXTENDED.map((t: string) => <option key={t} value={t}>{t}</option>)}
                       </select>
                     </div>
-                    <div className="space-y-2"> {/* Новое поле: Площадь участка */}
+                    <div className="space-y-2">
                       <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Площадь участка (сот.)</label>
                       <input 
                         type="number"
@@ -405,7 +419,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                         className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl p-4 outline-none font-bold text-slate-700 transition"
                       />
                     </div>
-                    <div className="space-y-2"> {/* Новое поле: Кадастровый номер */}
+                    <div className="space-y-2">
                       <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Кадастровый номер</label>
                       <input 
                         type="text"
@@ -468,6 +482,27 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
                   <select name="heating" value={formData.heating} onChange={handleChange} className="w-full bg-slate-50 rounded-2xl p-4 outline-none font-bold">
                     {HEATING_OPTIONS.map((h: string) => <option key={h} value={h}>{h}</option>)}
                   </select>
+                </div>
+                {/* Новые поля: Год постройки/сдачи и Тип стен */}
+                <div className="space-y-2">
+                  <SingleSelectWithDelete
+                    label="Год постройки/сдачи"
+                    options={YEAR_BUILT_OPTIONS}
+                    initialOptions={YEAR_BUILT_OPTIONS}
+                    selected={formData.yearBuilt || ''}
+                    onChange={handleYearBuiltChange}
+                    onRemoveOption={() => {}} // Для предопределенных опций удаление не требуется
+                  />
+                </div>
+                <div className="space-y-2">
+                  <SingleSelectWithDelete
+                    label="Тип стен"
+                    options={WALL_TYPE_OPTIONS}
+                    initialOptions={WALL_TYPE_OPTIONS}
+                    selected={formData.wallType || ''}
+                    onChange={handleWallTypeChange}
+                    onRemoveOption={() => {}} // Для предопределенных опций удаление не требуется
+                  />
                 </div>
               </div>
             )}

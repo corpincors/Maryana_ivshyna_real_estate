@@ -146,6 +146,8 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({ properties }) =
                        property.locationType === 'outsideCity' && property.distanceFromCityKm !== undefined ? `${property.distanceFromCityKm} км от города` : '—'}
                     </span>
                   </li>
+                  {property.plotArea !== undefined && <li className="flex justify-between"><span>Площадь участка:</span> <span className="font-semibold">{property.plotArea} сот.</span></li>}
+                  {property.cadastralNumber && <li className="flex justify-between"><span>Кадастровый номер:</span> <span className="font-semibold">{property.cadastralNumber}</span></li>}
                 </>
               )}
               {property.category !== 'land' && (
@@ -160,6 +162,8 @@ const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({ properties }) =
                   <li className="flex justify-between"><span>Ремонт:</span> <span className="font-semibold">{property.hasRepair ? property.repairType : 'Без ремонта'}</span></li>
                   <li className="flex justify-between"><span>Отопление:</span> <span className="font-semibold">{property.heating}</span></li>
                   <li className="flex justify-between"><span>Меблировка:</span> <span className="font-semibold">{property.hasFurniture ? 'Да' : 'Нет'}</span></li>
+                  {property.yearBuilt && <li className="flex justify-between"><span>Год постройки/сдачи:</span> <span className="font-semibold">{property.yearBuilt}</span></li>}
+                  {property.wallType && <li className="flex justify-between"><span>Тип стен:</span> <span className="font-semibold">{property.wallType}</span></li>}
                 </>
               )}
               {property.category === 'land' && (
