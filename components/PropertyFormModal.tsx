@@ -6,7 +6,7 @@ import EditableSingleSelect from './EditableSingleSelect'; // Используе
 import { 
   LAND_TYPES, REPAIR_TYPES, HOUSING_CLASSES,
   HEATING_OPTIONS, TECH_OPTIONS, COMFORT_OPTIONS, COMM_OPTIONS, INFRA_OPTIONS,
-  HOUSE_TYPES_EXTENDED, YEAR_BUILT_OPTIONS, WALL_TYPE_OPTIONS, BATHROOM_OPTIONS // Удален INITIAL_DISTRICTS
+  HOUSE_TYPES_EXTENDED, YEAR_BUILT_OPTIONS, WALL_TYPE_OPTIONS, BATHROOM_OPTIONS
 } from '../constants.tsx';
 
 interface PropertyFormModalProps {
@@ -281,7 +281,7 @@ const PropertyFormModal: React.FC<PropertyFormModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xl z-[200] flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-5xl max-h-[95vh] rounded-[3rem] overflow-y-auto relative custom-scrollbar animate-in zoom-in-95 duration-300">
+      <div className="bg-white w-full max-w-7xl max-h-[95vh] rounded-[3rem] overflow-y-auto relative custom-scrollbar animate-in zoom-in-95 duration-300">
         <div className="sticky top-0 bg-white/90 backdrop-blur-md z-10 px-10 py-6 border-b border-slate-100 flex justify-between items-center">
           <div>
             <h2 className="text-3xl font-[900] text-slate-900 tracking-tight">

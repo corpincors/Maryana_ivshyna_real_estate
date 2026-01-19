@@ -20,6 +20,8 @@
     "techOptions": [],
     "comfortOptions": [],
     "commOptions": [],
-    "infraOptions": []
+    "infraOptions": [
+      "123"
+    ]
   }
 }

@@ -520,7 +520,7 @@ const App: React.FC = () => {
                             placeholder="До" 
                             value={filters.distanceFromCityKm} 
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilters({...filters, distanceFromCityKm: e.target.value})} 
-                            className="w-1/2 bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" 
+                            className="w-full bg-slate-50 rounded-2xl p-4 text-sm font-bold outline-none" 
                           />
                         </div>
                       )}
@@ -710,7 +710,7 @@ const App: React.FC = () => {
                               </label>
                               <label className="flex items-center gap-3 cursor-pointer group">
                                 <div 
-                                  classNameclassName={`w-12 h-6 rounded-full relative transition-all ${filters.hasRepair === true ? 'bg-indigo-600' : 'bg-slate-200'}`}
+                                  className={`w-12 h-6 rounded-full relative transition-all ${filters.hasRepair === true ? 'bg-indigo-600' : 'bg-slate-200'}`}
                                   onClick={() => setFilters({...filters, hasRepair: filters.hasRepair === true ? null : true})}
                                 >
                                   <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${filters.hasRepair === true ? 'left-7' : 'left-1'}`}></div>

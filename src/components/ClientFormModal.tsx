@@ -72,7 +72,7 @@ const ClientFormModal: React.FC<ClientFormModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xl z-[200] flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-2xl max-h-[95vh] rounded-[3rem] overflow-y-auto relative custom-scrollbar animate-in zoom-in-95 duration-300">
+      <div className="bg-white w-full max-w-4xl max-h-[95vh] rounded-[3rem] overflow-y-auto relative custom-scrollbar animate-in zoom-in-95 duration-300">
         <div className="sticky top-0 bg-white/90 backdrop-blur-md z-10 px-10 py-6 border-b border-slate-100 flex justify-between items-center">
           <div>
             <h2 className="text-3xl font-[900] text-slate-900 tracking-tight">
