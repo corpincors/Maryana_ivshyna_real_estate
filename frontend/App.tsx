@@ -15,9 +15,9 @@ import PropertyFormModal from './components/PropertyFormModal';
 import MultiSelect from './components/MultiSelect';
 import EditableMultiSelect from './components/EditableMultiSelect';
 import PropertyDetailPage from './src/pages/PropertyDetailPage';
-import LoginPage from '@/src/pages/LoginPage';
-import ClientsPage from '@/src/pages/ClientsPage';
-import { useAuth } from '@/src/context/AuthContext';
+import LoginPage from './src/pages/LoginPage';
+import ClientsPage from './src/pages/ClientsPage';
+import { useAuth } from './src/context/AuthContext';
 import { showSuccess, showError } from './src/utils/toast';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/properties';
