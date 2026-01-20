@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: vercel_app_db
+    environment:
+      POSTGRES_DB: vercel_app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+
+  backend:
+    build: ./backend
+    container_name: vercel_app_backend
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: vercel_app
+      DB_USER: postgres
+      DB_PASSWORD: password
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
