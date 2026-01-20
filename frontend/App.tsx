@@ -21,7 +21,7 @@ import { useAuth } from '@/src/context/AuthContext';
 import { showSuccess, showError } from './src/utils/toast';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/properties';
-const CUSTOM_OPTIONS_API_URL = '/api/customOptions';
+const CUSTOM_OPTIONS_API_URL = `${import.meta.env.VITE_API_URL || '/api'}/customOptions`;
 const ADDITIONAL_FILTERS_STORAGE_KEY = 'realty_crm_additional_filters_open';
 
 const App: React.FC = () => {
