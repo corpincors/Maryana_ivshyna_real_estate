@@ -1,0 +1,344 @@
+{
+  "properties": [
+    {
+      "id": "95lnr7obq",
+      "category": "apartments",
+      "type": "Secondary",
+      "price": 32000,
+      "district": "Малиновский",
+      "address": "Маршала малиновского 16а",
+      "ownerPhone": "380991039187",
+      "totalArea": 85,
+      "rooms": "3",
+      "hasFurniture": false,
+      "hasRepair": false,
+      "tech": [],
+      "comfort": [],
+      "comm": [],
+      "infra": [],
+      "isEOselya": false,
+      "description": "",
+      "imageUrls": [
+        "/images/95lnr7obq_1.jpeg"
+      ],
+      "houseSubtype": "Клубный дом",
+      "locationType": "inCity",
+      "cadastralNumber": "",
+      "floor": 7,
+      "totalFloors": 12,
+      "kitchenArea": 15,
+      "publicLink": "http://192.168.5.105:3000/property/95lnr7obq?clientMode=true",
+      "status": "sold"
+    },
+    {
+      "id": "gkpvitdpf",
+      "category": "apartments",
+      "type": "Secondary",
+      "status": "available",
+      "price": 32000,
+      "district": "Киевский",
+      "address": "32323",
+      "ownerPhone": "321323123",
+      "totalArea": 32,
+      "rooms": "1",
+      "hasFurniture": false,
+      "hasRepair": false,
+      "tech": [],
+      "comfort": [],
+      "comm": [],
+      "infra": [],
+      "isEOselya": false,
+      "description": "аванс 1к",
+      "imageUrls": [
+        "/images/gkpvitdpf_1.jpeg"
+      ],
+      "publicLink": "http://192.168.5.105:3000/property/gkpvitdpf?clientMode=true"
+    },
+    {
+      "id": "2niy7zgjl",
+      "category": "apartments",
+      "type": "Secondary",
+      "status": "available",
+      "price": 31231,
+      "district": "Малиновский",
+      "address": "3213123",
+      "ownerPhone": "31232",
+      "totalArea": 32,
+      "rooms": "1",
+      "hasFurniture": false,
+      "hasRepair": false,
+      "tech": [],
+      "comfort": [],
+      "comm": [],
+      "infra": [],
+      "isEOselya": false,
+      "description": "",
+      "imageUrls": [
+        "/images/2niy7zgjl_1.jpeg"
+      ],
+      "houseSubtype": "Клубный дом",
+      "locationType": "inCity",
+      "cadastralNumber": "",
+      "landCommunications": [],
+      "landStructures": [],
+      "landInfrastructure": [],
+      "landLandscape": [],
+      "kitchenArea": 232
+    },
+    {
+      "id": "u8eyxosqo",
+      "category": "apartments",
+      "type": "Secondary",
+      "status": "available",
+      "price": 23,
+      "district": "Киевский",
+      "address": "3213",
+      "ownerPhone": "3213",
+      "totalArea": 321,
+      "rooms": "1",
+      "housingClass": "123",
+      "hasFurniture": false,
+      "hasRepair": false,
+      "tech": [],
+      "comfort": [],
+      "comm": [],
+      "infra": [],
+      "isEOselya": false,
+      "description": "",
+      "imageUrls": [],
+      "houseSubtype": "Клубный дом",
+      "locationType": "inCity",
+      "cadastralNumber": "",
+      "landCommunications": [],
+      "landStructures": [],
+      "landInfrastructure": [],
+      "landLandscape": [],
+      "kitchenArea": 213,
+      "publicLink": "http://192.168.5.100:3000/property/u8eyxosqo?clientMode=true"
+    },
+    {
+      "id": "8aoe1g3nl",
+      "category": "apartments",
+      "type": "Secondary",
+      "status": "available",
+      "price": 32001,
+      "district": "Киевский",
+      "address": "Султан 1",
+      "ownerPhone": "у32424",
+      "totalArea": 87,
+      "rooms": "11",
+      "housingClass": "Клас жилья",
+      "hasFurniture": true,
+      "hasRepair": true,
+      "repairType": "Вид ремонта",
+      "heating": "Отопление",
+      "tech": [
+        "TV"
+      ],
+      "comfort": [
+        "Коммфооооооорт",
+        "Коммфорт",
+        "ааааааааааа"
+      ],
+      "comm": [
+        "Коммуникации"
+      ],
+      "infra": [
+        "Инфраструктура"
+      ],
+      "isEOselya": true,
+      "description": "авцававатовыатловыалвыраловыраолвавыр алвыоаролвыарвлоавцававатовыатловыалвыраловыраолвавыр алвыоаролвыарвлоавцававатовыатловыалвыраловыраолвавыр алвыоаролвыарвлоавцававатовыатловыалвыраловыраолвавыр алвыоаролвыарвлоавцававатовыатловыалвыраловыраолвавыр алвыоаролвыарвлоавцававатовыатловыалвыраловыраолвавыр алвыоаролвыарвлоавцававатовыатловыалвыраловыраолвавыр алвыоаролвыарвло",
+      "imageUrls": [],
+      "houseSubtype": "Клубный дом",
+      "locationType": "inCity",
+      "cadastralNumber": "",
+      "yearBuilt": "Год постройки",
+      "wallType": "Тип стен",
+      "bathroomType": "Санузел",
+      "landCommunications": [],
+      "landStructures": [],
+      "landInfrastructure": [],
+      "landLandscape": [],
+      "floor": 3,
+      "totalFloors": 12,
+      "kitchenArea": 14,
+      "dealType": "тИП СДЕЛКИ",
+      "planningStatus": "Планировка"
+    },
+    {
+      "id": "uhbeeyjqt",
+      "category": "houses",
+      "type": "Secondary",
+      "status": "available",
+      "price": 31995,
+      "district": "Малиновский",
+      "address": "3213213",
+      "ownerPhone": "321123213213",
+      "totalArea": 4324,
+      "rooms": "13",
+      "housingClass": "123",
+      "hasFurniture": false,
+      "hasRepair": false,
+      "repairType": "Вид ремонта",
+      "heating": "Отопление",
+      "tech": [],
+      "comfort": [],
+      "comm": [],
+      "infra": [],
+      "isEOselya": false,
+      "description": "ав",
+      "imageUrls": [],
+      "houseSubtype": "дача2",
+      "locationType": "outsideCity",
+      "distanceFromCityKm": 10,
+      "plotArea": 344,
+      "cadastralNumber": "4324324",
+      "yearBuilt": "Год постройки",
+      "wallType": "Тип стен",
+      "bathroomType": "Санузел",
+      "landCommunications": [],
+      "landStructures": [],
+      "landInfrastructure": [],
+      "landLandscape": [],
+      "kitchenArea": 43,
+      "floor": 4,
+      "totalFloors": 3
+    },
+    {
+      "id": "biloqyoyq",
+      "category": "land",
+      "type": "Secondary",
+      "status": "available",
+      "price": 32323,
+      "district": "Киевский",
+      "address": "213",
+      "ownerPhone": "3213",
+      "totalArea": 0,
+      "rooms": "1",
+      "housingClass": "123",
+      "hasFurniture": false,
+      "hasRepair": false,
+      "repairType": "Вид ремонта",
+      "heating": "Отопление",
+      "tech": [],
+      "comfort": [],
+      "comm": [],
+      "infra": [],
+      "isEOselya": false,
+      "description": "32131232",
+      "imageUrls": [],
+      "locationType": "outsideCity",
+      "distanceFromCityKm": 3232323323,
+      "cadastralNumber": "2132133",
+      "landCommunications": [
+        "3123213",
+        "3213213",
+        "321321312"
+      ],
+      "landStructures": [
+        "3213213",
+        "32132133",
+        "3232323",
+        "32323"
+      ],
+      "landInfrastructure": [
+        "4234324",
+        "42343244324",
+        "4324"
+      ],
+      "landLandscape": [
+        "432432",
+        "234324",
+        "43243243243"
+      ],
+      "landType": "3123213213213",
+      "landArea": 32133
+    }
+  ],
+  "clients": [
+    {
+      "id": "as0akqm4r",
+      "clientName": "32",
+      "phoneNumber": "3213213",
+      "lastCalled": "2026-01-19T04:25:51.620Z",
+      "request": "323"
+    }
+  ],
+  "customOptions": {
+    "districts": [
+      "Поселок котовского"
+    ],
+    "housingClasses": [
+      "123",
+      "321",
+      "Клас жилья"
+    ],
+    "repairTypes": [
+      "Вид ремонта"
+    ],
+    "heatingOptions": [
+      "Отопление"
+    ],
+    "yearBuiltOptions": [
+      "Год постройки"
+    ],
+    "wallTypeOptions": [
+      "Тип стен"
+    ],
+    "bathroomOptions": [
+      "Санузел"
+    ],
+    "techOptions": [
+      "TV"
+    ],
+    "comfortOptions": [
+      "Коммфооооооорт",
+      "Коммфорт",
+      "ааааааааааа"
+    ],
+    "commOptions": [
+      "Коммуникации"
+    ],
+    "infraOptions": [
+      "Инфраструктура"
+    ],
+    "landTypes": [
+      "31232132132",
+      "3123213213213",
+      "312321321321321"
+    ],
+    "landInfrastructureOptions": [
+      "4234324",
+      "42343244324",
+      "4324"
+    ],
+    "landLandscapeOptions": [
+      "234324",
+      "432432",
+      "43243243243"
+    ],
+    "houseTypes": [
+      "дача2"
+    ],
+    "dealTypeOptions": [
+      "123",
+      "тИП СДЕЛКИ"
+    ],
+    "planningStatusOptions": [
+      "323",
+      "Планировка",
+      "планировка1111111"
+    ],
+    "landCommunicationsOptions": [
+      "3123213",
+      "3213213",
+      "321321312"
+    ],
+    "landStructuresOptions": [
+      "3213213",
+      "32132133",
+      "32323",
+      "3232323"
+    ]
+  }
+}
